@@ -1,0 +1,120 @@
+{
+  "id": "blizzard-02-23-26",
+  "title": "blizzard 02.23.26",
+  "location": "NYC",
+  "bpm": 127,
+  "stems": [
+    {
+      "key": "subway",
+      "file": "stems_for_player/subway_dry.mp3",
+      "label": "L Train Delay",
+      "source": "MTA · L Train",
+      "target": "→ drums · bitcrush · filter · feedback",
+      "dataSource": "mta",
+      "fx": ["bitcrusher", "filter", "feedbackDelay"],
+      "fxPanel": {
+        "title": "L Train Delay → Drums",
+        "rows": [
+          { "id": "bits",     "label": "Bit Depth",      "unit": "bits", "src": "L Train delay" },
+          { "id": "filter",   "label": "Filter Cutoff",  "unit": "Hz",   "src": "L Train delay" },
+          { "id": "feedback", "label": "Delay Feedback", "unit": "%",    "src": "L Train delay" }
+        ]
+      }
+    },
+    {
+      "key": "snow",
+      "file": "stems_for_player/snow_dry.mp3",
+      "label": "Precipitation",
+      "source": "Weather · Precipitation",
+      "target": "→ lead · autowah · autofilter · vibrato · pump",
+      "dataSource": "weather_precip",
+      "fx": ["autoWah", "autoFilter", "vibrato", "pumpGain"],
+      "fxPanel": {
+        "title": "Precipitation → Lead",
+        "rows": [
+          { "id": "wah",        "label": "Wah Base Freq",  "unit": "Hz", "src": "Precipitation" },
+          { "id": "autoFilter", "label": "AutoFilter Wet", "unit": "%",  "src": "Precipitation" },
+          { "id": "vibrato",    "label": "Vibrato Rate",   "unit": "Hz", "src": "Precipitation" },
+          { "id": "pump",       "label": "Pump Depth",     "unit": "%",  "src": "Precip (inv)"  }
+        ]
+      }
+    },
+    {
+      "key": "temp",
+      "file": "stems_for_player/temp_dry.mp3",
+      "label": "Temperature",
+      "source": "Weather · Temperature",
+      "target": "→ lead · ping pong · chorus · reverb",
+      "dataSource": "weather_temp",
+      "fx": ["pingPongDelay", "chorus", "reverb"],
+      "fxPanel": {
+        "title": "Temperature → Lead",
+        "rows": [
+          { "id": "ping",   "label": "Ping Pong Wet", "unit": "%", "src": "Temperature" },
+          { "id": "chorus", "label": "Chorus Depth",  "unit": "%", "src": "Temperature" },
+          { "id": "reverb", "label": "Reverb Wet",    "unit": "%", "src": "Temperature" }
+        ]
+      }
+    },
+    {
+      "key": "wind",
+      "file": "stems_for_player/wind_dry.mp3",
+      "label": "Wind Speed",
+      "source": "Weather · Wind Speed",
+      "target": "→ bass · filter · distortion",
+      "dataSource": "weather_wind",
+      "fx": ["filter", "distortion"],
+      "fxPanel": {
+        "title": "Wind Speed → Bass",
+        "rows": [
+          { "id": "filter", "label": "Filter Cutoff", "unit": "Hz", "src": "Wind speed" },
+          { "id": "dist",   "label": "Distortion",    "unit": "%",  "src": "Wind speed" }
+        ]
+      }
+    },
+    {
+      "key": "market",
+      "file": "stems_for_player/market_dry.mp3",
+      "label": "BTC Price",
+      "source": "Markets · BTC-USD",
+      "target": "→ keys · freq shift · tremolo",
+      "dataSource": "btc_delta",
+      "fx": ["frequencyShifter", "tremolo"],
+      "fxPanel": {
+        "title": "BTC-USD 60s Delta → Keys",
+        "rows": [
+          { "id": "shift",   "label": "Freq Shift",   "unit": "Hz", "src": "BTC delta" },
+          { "id": "tremolo", "label": "Tremolo Rate",  "unit": "Hz", "src": "BTC delta" }
+        ]
+      }
+    },
+    {
+      "key": "time",
+      "file": "stems_for_player/time_dry.mp3",
+      "label": "Hour of Day",
+      "source": "Time · Hour of Day",
+      "target": "→ perc · highpass · bitcrush",
+      "dataSource": "time_solar",
+      "fx": ["highpass", "bitcrusher"],
+      "fxPanel": {
+        "title": "Hour of Day → Percussion",
+        "rows": [
+          { "id": "hipass", "label": "HP Cutoff",  "unit": "Hz",   "src": "Hour of day" },
+          { "id": "bits",   "label": "Bit Depth",  "unit": "bits", "src": "Hour of day" }
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "navLabel": "doux · live data player · blizzard 02.23.26",
+    "sectionLabel": "· six stems · six data sources · infinite states",
+    "consequence": "The same recording.",
+    "consequenceEm": "Never the same twice.",
+    "heroBody": "This track is different right now than it was an hour ago. It will also be different tomorrow.",
+    "howItWorks": "Six live data sources modulate the stems in real time — transit, weather, markets, the hour of day. Press play. Click any tile.",
+    "ctaHeadline": "A new, everchanging format for recorded music.",
+    "ctaBody": "The same song, infinite valid states. Every version shaped by the world around you. Join the dispatch list.",
+    "footerTrack": "blizzard 02.23.26 · NYC",
+    "statusPlaying": "· playing · blizzard 02.23.26 ·"
+  }
+}

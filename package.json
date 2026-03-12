@@ -1,0 +1,8 @@
+{
+  "name": "doux-v2",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "gtfs-realtime-bindings": "^1.1.0"
+  }
+}
