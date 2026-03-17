@@ -399,7 +399,7 @@
 </head>
 <body>
 
-<div id="entry-overlay">
+<div id="entry-overlay" onclick="dismissEntry()" ontouchstart="dismissEntry()">
   <div class="entry-word">doux</div>
   <div class="entry-cue"><span class="live-dot"></span>touch anywhere to listen</div>
 </div>
@@ -1033,6 +1033,9 @@ async function _startPlayback(){
 ['click','touchstart','keydown','scroll'].forEach(evt=>{
   document.addEventListener(evt, dismissEntry, {once:true, passive:true});
 });
+// Also attach directly to overlay as belt-and-suspenders
+const _ov=document.getElementById('entry-overlay');
+if(_ov){_ov.style.cursor='crosshair';_ov.addEventListener('click',dismissEntry,{once:true});_ov.addEventListener('touchstart',dismissEntry,{once:true,passive:true});}
 
 document.getElementById('master-play-btn').addEventListener('click',async()=>{
   if(typeof Tone==='undefined'){setStatus('· Tone.js not loaded ·');return;}
