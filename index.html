@@ -23,337 +23,148 @@
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
-  body{
-    background:var(--tod-bg);
-    color:var(--tod-ink);
-    font-family:var(--mono);
-    overflow-x:hidden;
-    cursor:crosshair;
-    transition:background 120s linear, color 120s linear;
-  }
+  body{background:var(--tod-bg);color:var(--tod-ink);font-family:var(--mono);overflow-x:hidden;cursor:crosshair;transition:background 120s linear, color 120s linear;}
 
   /* ── Entry overlay ── */
-  #entry-overlay{
-    position:fixed;inset:0;z-index:9999;
-    background:var(--tod-bg);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:2rem;
-    transition:opacity 1.2s ease;
-  }
+  #entry-overlay{position:fixed;inset:0;z-index:9999;background:var(--tod-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transition:opacity 1.2s ease;}
   #entry-overlay.dismissed{opacity:0;pointer-events:none;}
-  .entry-word{
-    font-family:var(--serif);
-    font-size:clamp(4rem,14vw,11rem);
-    font-weight:800;letter-spacing:-0.03em;line-height:1;
-    opacity:0;animation:entryFade 1.2s ease 0.3s forwards;
-  }
-  .entry-cue{
-    font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;
-    opacity:0;animation:entryFade 0.8s ease 1.1s forwards;
-  }
+  .entry-word{font-family:var(--serif);font-size:clamp(4rem,14vw,11rem);font-weight:800;letter-spacing:-0.03em;line-height:1;opacity:0;animation:entryFade 1.2s ease 0.3s forwards;}
+  .entry-cue{font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;opacity:0;animation:entryFade 0.8s ease 1.1s forwards;}
   @keyframes entryFade{from{opacity:0;transform:translateY(8px)}to{opacity:0.9;transform:translateY(0)}}
 
   /* ── Loading ── */
-  #track-loading{
-    position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
-    z-index:8000;
-    font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;
-    opacity:0;transition:opacity 0.4s;
-    pointer-events:none;
-  }
+  #track-loading{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:8000;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;opacity:0;transition:opacity 0.4s;pointer-events:none;}
   #track-loading.visible{opacity:0.35;}
 
   /* ── Background canvas ── */
   #data-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;}
 
   /* ── Nav ── */
-  nav{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    display:flex;justify-content:space-between;align-items:center;
-    padding:1.8rem 2.5rem;
-    pointer-events:none;
-  }
-  .nav-logo{
-    font-family:var(--serif);font-size:1rem;font-weight:800;
-    letter-spacing:-0.01em;opacity:0.5;
-    pointer-events:all;
-  }
-  .nav-right{
-    font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;
-    opacity:0.28;pointer-events:all;
-  }
-  #nav-status{transition:opacity 0.3s;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.8rem 2.5rem;pointer-events:none;}
+  .nav-logo{font-family:var(--serif);font-size:1rem;font-weight:800;letter-spacing:-0.01em;opacity:0.5;pointer-events:all;}
+  .nav-right{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;opacity:0.28;pointer-events:all;}
 
-  /* ══════════════════════════════
-     HERO
-  ══════════════════════════════ */
-  #hero{
-    position:relative;z-index:1;
-    min-height:100vh;
-    display:flex;flex-direction:column;justify-content:flex-end;
-    padding:0 2.5rem 5rem;
+  /* ── Track indicator ── */
+  .track-indicator{
+    display:flex;align-items:center;gap:0.7rem;
+    margin-bottom:3rem;
   }
+  .track-dot{width:5px;height:5px;border-radius:50%;background:var(--tod-ink);opacity:0.15;transition:opacity 0.3s,transform 0.3s;cursor:crosshair;}
+  .track-dot.active{opacity:0.55;transform:scale(1.3);}
+  .track-hint{font-size:0.48rem;letter-spacing:0.18em;text-transform:uppercase;opacity:0.2;margin-left:0.4rem;}
 
+  /* ── Track switch transition ── */
+  .track-content{transition:opacity 0.35s ease, transform 0.35s ease;}
+  .track-content.switching{opacity:0;transform:translateY(-6px);}
+
+  /* ══ HERO ══ */
+  #hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 2.5rem 5rem;}
   .data-poem{margin-bottom:4rem;}
-  .poem-line{
-    display:grid;
-    grid-template-columns:140px 1fr auto;
-    align-items:baseline;gap:0 2rem;
-    border-top:1px solid var(--tod-line);
-    padding:0.85rem 0;
-    opacity:0;
-    animation:lineIn 0.5s ease forwards;
-  }
-  .poem-line:nth-child(1){animation-delay:0.05s;}
-  .poem-line:nth-child(2){animation-delay:0.12s;}
-  .poem-line:nth-child(3){animation-delay:0.19s;}
-  .poem-line:nth-child(4){animation-delay:0.26s;}
-  .poem-line:nth-child(5){animation-delay:0.33s;}
-  .poem-line:nth-child(6){animation-delay:0.40s;}
+  .poem-line{display:grid;grid-template-columns:140px 1fr auto;align-items:baseline;gap:0 2rem;border-top:1px solid var(--tod-line);padding:0.85rem 0;opacity:0;animation:lineIn 0.5s ease forwards;}
+  .poem-line:nth-child(1){animation-delay:0.05s;}.poem-line:nth-child(2){animation-delay:0.12s;}.poem-line:nth-child(3){animation-delay:0.19s;}.poem-line:nth-child(4){animation-delay:0.26s;}.poem-line:nth-child(5){animation-delay:0.33s;}.poem-line:nth-child(6){animation-delay:0.40s;}
   @keyframes lineIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-  .poem-label{
-    font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;
-    opacity:0.65;line-height:1;
-  }
-  .poem-value{
-    font-family:var(--serif);
-    font-size:clamp(2.2rem,6vw,5.5rem);
-    font-weight:700;letter-spacing:-0.03em;line-height:0.95;
-  }
+  .poem-label{font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.65;line-height:1;}
+  .poem-value{font-family:var(--serif);font-size:clamp(2.2rem,6vw,5.5rem);font-weight:700;letter-spacing:-0.03em;line-height:0.95;}
   .poem-value.loading{opacity:0.15;}
-  .poem-sub{
-    font-size:0.72rem;letter-spacing:0.10em;opacity:0.60;
-    text-align:right;font-style:italic;white-space:nowrap;
-  }
-
+  .poem-sub{font-size:0.72rem;letter-spacing:0.10em;opacity:0.60;text-align:right;font-style:italic;white-space:nowrap;}
   .hero-statement{max-width:520px;}
-  /* INCREASED: was 0.68rem */
-  .hero-statement p{
-    font-size:0.82rem;line-height:1.85;opacity:0.5;
-  }
-  /* INCREASED: was 0.48rem */
-  .hero-statement .meta-note{
-    font-size:0.62rem;letter-spacing:0.06em;opacity:0.25;
-    margin-top:0.7rem;font-style:italic;
-  }
+  .hero-statement p{font-size:0.82rem;line-height:1.85;opacity:0.5;}
+  .hero-statement .meta-note{font-size:0.62rem;letter-spacing:0.06em;opacity:0.25;margin-top:0.7rem;font-style:italic;}
 
-  /* ══════════════════════════════
-     PLAYER
-  ══════════════════════════════ */
-  #player{
-    position:relative;z-index:1;
-    padding:5rem 2.5rem 4rem;
-    border-top:1px solid var(--tod-line);
-  }
-
-  .player-meta{
-    display:flex;align-items:baseline;justify-content:space-between;
-    margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;
-  }
-  .player-title{
-    font-family:var(--serif);
-    font-size:clamp(1.1rem,2.2vw,1.8rem);
-    font-weight:700;letter-spacing:-0.01em;line-height:1.2;
-  }
+  /* ══ PLAYER ══ */
+  #player{position:relative;z-index:1;padding:5rem 2.5rem 4rem;border-top:1px solid var(--tod-line);}
+  .player-meta{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
+  .player-title{font-family:var(--serif);font-size:clamp(1.1rem,2.2vw,1.8rem);font-weight:700;letter-spacing:-0.01em;line-height:1.2;}
   .player-title em{font-style:italic;font-weight:400;opacity:0.5;}
   .player-right{display:flex;align-items:center;gap:1.5rem;}
-
-  /* Tile interaction hint — NEW */
-  .player-hint{
-    font-size:0.78rem;letter-spacing:0.06em;opacity:0.60;
-    margin-bottom:2.5rem;font-style:italic;
-    padding-bottom:1.2rem;
-    border-bottom:1px solid var(--tod-line);
-  }
-
-  .play-btn{
-    display:flex;align-items:center;gap:0.6rem;
-    background:transparent;
-    border:1px solid var(--tod-line);
-    color:var(--tod-ink);
-    padding:0.65rem 1.2rem;
-    font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;
-    cursor:crosshair;transition:border-color 0.2s,opacity 0.2s;
-  }
+  .player-hint{font-size:0.78rem;letter-spacing:0.06em;opacity:0.60;margin-bottom:2.5rem;font-style:italic;padding-bottom:1.2rem;border-bottom:1px solid var(--tod-line);}
+  .play-btn{display:flex;align-items:center;gap:0.6rem;background:transparent;border:1px solid var(--tod-line);color:var(--tod-ink);padding:0.65rem 1.2rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;cursor:crosshair;transition:border-color 0.2s,opacity 0.2s;}
   .play-btn:hover{border-color:var(--tod-ink);}
   .play-btn svg{width:9px;height:9px;fill:var(--tod-ink);stroke:none;flex-shrink:0;}
   .play-btn.playing{background:var(--tod-ink);color:var(--tod-bg);}
   .play-btn.playing svg{fill:var(--tod-bg);}
-
   #player-status{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;font-style:italic;}
-
   #spectrum-canvas{width:100%;height:52px;display:block;margin-bottom:2.5rem;}
-
-  .stems-grid{
-    display:grid;grid-template-columns:repeat(6,1fr);
-    gap:1px;background:var(--tod-line);border:1px solid var(--tod-line);
-  }
+  .stems-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--tod-line);border:1px solid var(--tod-line);}
   @media(max-width:1100px){.stems-grid{grid-template-columns:repeat(3,1fr);}}
   @media(max-width:600px){.stems-grid{grid-template-columns:repeat(2,1fr);}}
-
-  .stem-tile{
-    background:var(--tod-bg);padding:1.6rem 1.4rem 1.3rem;
-    cursor:crosshair;transition:background 0.25s;
-    position:relative;user-select:none;display:flex;flex-direction:column;
-  }
+  .stem-tile{background:var(--tod-bg);padding:1.6rem 1.4rem 1.3rem;cursor:crosshair;transition:background 0.25s;position:relative;user-select:none;display:flex;flex-direction:column;}
   .stem-tile:hover{background:var(--tod-faint);}
   .stem-tile.active{background:var(--tod-ink);}
-  /* INCREASED: was 0.4rem */
-  .stem-badge{
-    position:absolute;top:0.9rem;right:0.9rem;
-    font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;
-    opacity:0;transition:opacity 0.2s;padding:0.15rem 0.4rem;
-    border:1px solid currentColor;
-  }
+  .stem-tile.anchor{cursor:default;}
+  .stem-tile.anchor:hover{background:var(--tod-bg);}
+  .stem-badge{position:absolute;top:0.9rem;right:0.9rem;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0;transition:opacity 0.2s;padding:0.15rem 0.4rem;border:1px solid currentColor;}
   .stem-tile:hover .stem-badge{opacity:0.35;}
   .stem-tile.active .stem-badge{opacity:0.6;color:var(--tod-bg);border-color:rgba(245,240,232,0.3);}
-  /* INCREASED: was 0.44rem */
+  .stem-tile.anchor .stem-badge{opacity:0.2;}
   .stem-source{font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.38;margin-bottom:0.4rem;transition:color 0.25s,opacity 0.25s;}
   .stem-tile.active .stem-source{color:var(--tod-bg);opacity:0.4;}
   .stem-param{font-family:var(--serif);font-size:1.15rem;font-weight:700;margin-bottom:0.18rem;transition:color 0.25s;}
   .stem-tile.active .stem-param{color:var(--tod-bg);}
-  /* INCREASED: was 0.54rem */
   .stem-target{font-size:0.64rem;opacity:0.38;font-style:italic;margin-bottom:0.85rem;transition:color 0.25s,opacity 0.25s;line-height:1.4;}
   .stem-tile.active .stem-target{color:var(--tod-bg);opacity:0.5;}
   .stem-canvas{display:block;width:100%;height:22px;margin-bottom:0.85rem;}
-  /* INCREASED: was 0.4rem */
-  .stem-mute{
-    width:100%;padding:0.35rem 0;
-    font-family:var(--mono);font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;
-    background:transparent;border:1px solid var(--tod-line);
-    color:var(--tod-ink);cursor:crosshair;transition:all 0.18s;
-    display:block;margin-top:auto;
-  }
+  .stem-mute{width:100%;padding:0.35rem 0;font-family:var(--mono);font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;background:transparent;border:1px solid var(--tod-line);color:var(--tod-ink);cursor:crosshair;transition:all 0.18s;display:block;margin-top:auto;}
   .stem-mute:hover{border-color:var(--tod-ink);}
   .stem-tile.active .stem-mute{border-color:rgba(245,240,232,0.22);color:var(--tod-bg);}
   .stem-tile.active .stem-mute.is-muted{background:rgba(245,240,232,0.1);border-color:var(--tod-bg)!important;}
   .stem-mute.is-muted{background:var(--tod-faint);border-color:var(--tod-ink)!important;}
 
   /* FX Panel */
-  .fx-panel{
-    position:fixed;bottom:2rem;right:2rem;width:260px;
-    background:var(--tod-bg);border:1px solid var(--tod-line);
-    z-index:300;box-shadow:0 4px 24px rgba(0,0,0,0.07);
-    opacity:0;transform:translateY(8px);pointer-events:none;
-    transition:opacity 0.2s ease,transform 0.2s ease;
-  }
+  .fx-panel{position:fixed;bottom:2rem;right:2rem;width:260px;background:var(--tod-bg);border:1px solid var(--tod-line);z-index:300;box-shadow:0 4px 24px rgba(0,0,0,0.07);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity 0.2s ease,transform 0.2s ease;}
   .fx-panel.visible{opacity:1;transform:translateY(0);pointer-events:all;}
   .fx-panel-head{display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0.95rem;border-bottom:1px solid var(--tod-line);}
-  /* INCREASED: was 0.44rem */
   .fx-panel-title{font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.4;display:flex;align-items:center;gap:0.38rem;}
   .fx-panel-title::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--tod-ink);animation:pulse 2s ease-in-out infinite;}
-  /* INCREASED: was 0.42rem */
   .fx-panel-close{font-size:0.56rem;letter-spacing:0.1em;opacity:0.28;cursor:crosshair;background:none;border:none;color:var(--tod-ink);font-family:var(--mono);padding:0;}
   .fx-panel-close:hover{opacity:0.7;}
   .fx-panel-body{padding:0.85rem 0.95rem 0.95rem;}
-  .fx-row{margin-bottom:0.85rem;}
-  .fx-row:last-child{margin-bottom:0;}
+  .fx-panel-note{font-size:0.58rem;line-height:1.7;opacity:0.4;font-style:italic;}
+  .fx-row{margin-bottom:0.85rem;}.fx-row:last-child{margin-bottom:0;}
   .fx-row-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.32rem;}
-  /* INCREASED: was 0.4rem */
   .fx-row-name{font-size:0.54rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.35;}
   .fx-row-val{font-family:var(--serif);font-size:0.82rem;font-weight:700;opacity:0.75;min-width:2.8rem;text-align:right;}
   .fx-track{width:100%;height:1px;background:var(--tod-line);position:relative;}
   .fx-fill{height:100%;background:var(--tod-ink);transition:width 0.12s linear;position:relative;}
   .fx-fill::after{content:'';position:absolute;right:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--tod-ink);border:2px solid var(--tod-bg);}
-  /* INCREASED: was 0.38rem */
   .fx-source{font-size:0.52rem;opacity:0.22;font-style:italic;margin-top:0.25rem;}
   .fx-data-val{font-size:0.52rem;opacity:0.4;margin-top:0.1rem;}
 
-  /* ══════════════════════════════
-     MANIFESTO
-  ══════════════════════════════ */
-  #manifesto{
-    position:relative;z-index:1;
-    padding:7rem 2.5rem;
-    border-top:1px solid var(--tod-line);
-    display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;
-  }
+  /* ══ MANIFESTO ══ */
+  #manifesto{position:relative;z-index:1;padding:7rem 2.5rem;border-top:1px solid var(--tod-line);display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;}
   @media(max-width:860px){#manifesto{grid-template-columns:1fr;gap:3rem;}}
-  .manifesto-text{
-    font-family:var(--serif);
-    font-size:clamp(1.25rem,2vw,1.75rem);
-    font-weight:500;line-height:1.6;letter-spacing:-0.01em;opacity:0.88;
-  }
+  .manifesto-text{font-family:var(--serif);font-size:clamp(1.25rem,2vw,1.75rem);font-weight:500;line-height:1.6;letter-spacing:-0.01em;opacity:0.88;}
   .manifesto-text em{font-style:italic;font-weight:400;opacity:0.6;}
-  /* INCREASED: was 0.7rem */
-  .manifesto-aside{
-    font-size:0.82rem;line-height:1.9;opacity:0.5;
-    border-left:1px solid var(--tod-line);padding-left:2rem;
-    margin-top:4rem;
-  }
+  .manifesto-aside{font-size:0.82rem;line-height:1.9;opacity:0.5;border-left:1px solid var(--tod-line);padding-left:2rem;margin-top:4rem;}
   @media(max-width:860px){.manifesto-aside{margin-top:0;}}
-  .manifesto-aside a{
-    color:var(--tod-ink);opacity:0.8;text-decoration:none;
-    border-bottom:1px solid var(--tod-line);
-    font-size:0.88rem;
-    letter-spacing:0.04em;
-  }
+  .manifesto-aside a{color:var(--tod-ink);opacity:0.8;text-decoration:none;border-bottom:1px solid var(--tod-line);font-size:0.88rem;letter-spacing:0.04em;}
   .manifesto-aside a:hover{opacity:1;}
 
-  /* ══════════════════════════════
-     MECHANISM
-  ══════════════════════════════ */
-  #mechanism{
-    position:relative;z-index:1;
-    padding:0 2.5rem 6rem;
-    border-top:none;
-  }
-  .mechanism-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);
-    gap:1px;background:var(--tod-line);border:1px solid var(--tod-line);
-  }
+  /* ══ MECHANISM ══ */
+  #mechanism{position:relative;z-index:1;padding:0 2.5rem 6rem;border-top:none;}
+  .mechanism-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--tod-line);border:1px solid var(--tod-line);}
   @media(max-width:860px){.mechanism-grid{grid-template-columns:repeat(2,1fr);}}
   @media(max-width:500px){.mechanism-grid{grid-template-columns:1fr;}}
   .mech-cell{background:var(--tod-bg);padding:2rem 1.8rem;}
-  /* INCREASED: was 0.4rem */
   .mech-index{font-size:0.54rem;letter-spacing:0.18em;text-transform:uppercase;opacity:0.22;margin-bottom:1.1rem;}
-  /* INCREASED: was 0.46rem */
   .mech-source{font-size:0.60rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.42;margin-bottom:0.45rem;}
   .mech-stem{font-family:var(--serif);font-size:1.3rem;font-weight:700;margin-bottom:0.25rem;letter-spacing:-0.01em;}
-  /* INCREASED: was 0.56rem */
   .mech-target{font-size:0.68rem;opacity:0.38;font-style:italic;margin-bottom:1.1rem;line-height:1.5;}
-  /* INCREASED: was 0.58rem */
   .mech-logic{font-size:0.70rem;line-height:1.75;opacity:0.52;}
-  /* INCREASED: was 0.4rem */
-  .mech-live{
-    display:inline-block;margin-top:0.9rem;
-    font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;
-    opacity:0.28;padding:0.18rem 0.45rem;border:1px solid var(--tod-line);
-  }
+  .mech-live{display:inline-block;margin-top:0.9rem;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.28;padding:0.18rem 0.45rem;border:1px solid var(--tod-line);}
+  .mech-cell.global-cell{background:var(--tod-faint);}
 
-  /* ══════════════════════════════
-     FOOTER
-  ══════════════════════════════ */
-  footer{
-    position:relative;z-index:1;
-    border-top:1px solid var(--tod-line);
-    padding:2.5rem 2.5rem;
-    display:flex;justify-content:space-between;align-items:center;
-    flex-wrap:wrap;gap:1.5rem;
-  }
+  /* ══ FOOTER ══ */
+  footer{position:relative;z-index:1;border-top:1px solid var(--tod-line);padding:2.5rem 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;}
   .footer-left{display:flex;flex-direction:column;gap:0.6rem;}
-  /* INCREASED: was 0.48rem */
   .footer-track{font-size:0.62rem;letter-spacing:0.10em;text-transform:uppercase;opacity:0.28;}
-  /* INCREASED: was 0.55rem — CTA made prominent */
-  .footer-dispatch{
-    font-size:0.82rem;letter-spacing:0.04em;opacity:0.6;
-  }
-  .footer-dispatch a{
-    color:var(--tod-ink);text-decoration:none;
-    border-bottom:1px solid currentColor;padding-bottom:1px;
-    transition:opacity 0.2s;
-    font-size:0.88rem;
-    letter-spacing:0.06em;
-    opacity:0.85;
-  }
+  .footer-dispatch{font-size:0.82rem;letter-spacing:0.04em;opacity:0.6;}
+  .footer-dispatch a{color:var(--tod-ink);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px;transition:opacity 0.2s;font-size:0.88rem;letter-spacing:0.06em;opacity:0.85;}
   .footer-dispatch a:hover{opacity:1;}
   .footer-right{display:flex;align-items:center;gap:2rem;}
-  /* INCREASED: was 0.48rem */
   .footer-link{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--tod-ink);text-decoration:none;opacity:0.32;transition:opacity 0.2s;}
   .footer-link:hover{opacity:0.7;}
-  /* INCREASED: was 0.46rem */
-  #live-readout,#btc-readout{font-size:0.60rem;letter-spacing:0.07em;opacity:0.25;text-transform:uppercase;}
+  #live-readout,#btc-readout,#aqi-readout{font-size:0.60rem;letter-spacing:0.07em;opacity:0.25;text-transform:uppercase;}
 
   .live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--tod-ink);margin-right:0.4rem;animation:pulse 2s ease-in-out infinite;vertical-align:middle;position:relative;top:-1px;}
   @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.2;transform:scale(0.55)}}
@@ -363,8 +174,7 @@
     #hero{padding:0 1.5rem 3.5rem;}
     #player,#manifesto,#mechanism{padding-left:1.5rem;padding-right:1.5rem;}
     footer{padding:1.8rem 1.5rem;}
-    .poem-label{display:none;}
-    .poem-sub{display:none;}
+    .poem-label{display:none;}.poem-sub{display:none;}
     .poem-line{grid-template-columns:1fr;}
     .fx-panel{left:1rem;right:1rem;width:auto;}
   }
@@ -415,78 +225,52 @@
 
 <nav>
   <div class="nav-logo">doux</div>
-  <div class="nav-right">
-    <span id="nav-status">· live · nyc ·</span>
-  </div>
+  <div class="nav-right"><span id="nav-status">· live · nyc ·</span></div>
 </nav>
 
-<!-- ══ HERO ══ -->
 <section id="hero">
-  <div class="data-poem">
-    <div class="poem-line">
-      <span class="poem-label">L Train</span>
-      <span class="poem-value loading" id="poem-subway">—</span>
-      <span class="poem-sub">drums · bitcrush · feedback</span>
+  <!-- track indicator -->
+  <div class="track-content" id="hero-content">
+    <div class="track-indicator">
+      <span class="track-dot active" id="dot-1" title="blizzard 02.23.26"></span>
+      <span class="track-dot" id="dot-2" title="track 2"></span>
+      <span class="track-hint">swipe ←→</span>
     </div>
-    <div class="poem-line">
-      <span class="poem-label">Temperature</span>
-      <span class="poem-value loading" id="poem-temp">—</span>
-      <span class="poem-sub">lead · reverb · chorus</span>
-    </div>
-    <div class="poem-line">
-      <span class="poem-label">Precipitation</span>
-      <span class="poem-value loading" id="poem-snow">—</span>
-      <span class="poem-sub">lead · autowah · vibrato</span>
-    </div>
-    <div class="poem-line">
-      <span class="poem-label">Wind</span>
-      <span class="poem-value loading" id="poem-wind">—</span>
-      <span class="poem-sub">bass · filter · distortion</span>
-    </div>
-    <div class="poem-line">
-      <span class="poem-label">BTC-USD</span>
-      <span class="poem-value loading" id="poem-market">—</span>
-      <span class="poem-sub">keys · freq shift · tremolo</span>
-    </div>
-    <div class="poem-line">
-      <span class="poem-label">Hour of Day</span>
-      <span class="poem-value loading" id="poem-time">—</span>
-      <span class="poem-sub">perc · highpass · bitcrush</span>
-    </div>
-  </div>
 
-  <div class="hero-statement">
-    <p>This is what the music sounds like right now.<br>It sounded different at 6am. It will sound different at midnight.</p>
-    <p class="meta-note">· This page looks different depending on when you're reading it ·</p>
+    <div class="data-poem" id="data-poem">
+      <!-- rendered by JS per track -->
+    </div>
+
+    <div class="hero-statement">
+      <p id="hero-body">This is what the music sounds like right now.<br>It sounded different at 6am. It will sound different at midnight.</p>
+      <p class="meta-note">· This page looks different depending on when you're reading it ·</p>
+    </div>
   </div>
 </section>
 
-<!-- ══ PLAYER ══ -->
 <section id="player">
-  <div class="player-meta">
-    <div class="player-title">
-      The same recording.<br><em>Never the same twice.</em>
+  <div class="track-content" id="player-content">
+    <div class="player-meta">
+      <div class="player-title">The same recording.<br><em>Never the same twice.</em></div>
+      <div class="player-right">
+        <button class="play-btn" id="master-play-btn">
+          <svg id="play-icon" viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg>
+          <span id="play-label">Play</span>
+        </button>
+        <span id="player-status">· touch anywhere to begin ·</span>
+      </div>
     </div>
-    <div class="player-right">
-      <button class="play-btn" id="master-play-btn">
-        <svg id="play-icon" viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg>
-        <span id="play-label">Play</span>
-      </button>
-      <span id="player-status">· touch anywhere to begin ·</span>
-    </div>
+    <div class="player-hint" id="player-hint">Click any stem tile to toggle live data on or off — and see the effects it's applying in real time.</div>
+    <canvas id="spectrum-canvas"></canvas>
+    <div class="stems-grid" id="stems-grid"></div>
   </div>
-  <!-- NEW: tile interaction hint -->
-  <div class="player-hint">Click any stem tile to toggle live data on or off — and see the effects it's applying in real time.</div>
-  <canvas id="spectrum-canvas"></canvas>
-  <div class="stems-grid" id="stems-grid"></div>
 </section>
 
-<!-- ══ MANIFESTO ══ -->
 <section id="manifesto">
   <div>
     <div class="manifesto-text">
       Recorded music has been frozen since 1877.<br><br>
-      doux (french for sweet-sounding) is a new format where the recording responds to the world it plays in. Not by generating sound with an algorithm, but by modulating what was already composed, allowing for infinite variations of a finished track, remixed by the world around you.<br><br>
+      doux is a new format where the recording responds to the world it plays in. Not by generating sound with an algorithm, but by modulating what was already composed, allowing for infinite variations of a finished track, remixed by the world around you.<br><br>
       Every note is fixed. <em>The world around you never is.</em>
     </div>
   </div>
@@ -501,32 +285,30 @@
   </div>
 </section>
 
-<!-- ══ MECHANISM ══ -->
 <section id="mechanism">
   <div class="mechanism-grid" id="mechanism-grid"></div>
 </section>
 
 <footer>
   <div class="footer-left">
-    <div class="footer-track">blizzard 02.23.26 · nyc</div>
-    <div class="footer-dispatch">
-      A new format for recorded music. <a href="https://eegee.substack.com" target="_blank">Join the dispatch →</a>
-    </div>
+    <div class="footer-track" id="footer-track">blizzard 02.23.26 · nyc</div>
+    <div class="footer-dispatch">A new format for recorded music. <a href="https://eegee.substack.com" target="_blank">Join the dispatch →</a></div>
   </div>
   <div class="footer-right">
     <a href="https://eegee.substack.com" target="_blank" class="footer-link">Substack ↗</a>
     <a href="https://www.instagram.com/eliasgoodman/" target="_blank" class="footer-link">Instagram ↗</a>
     <span id="live-readout">· loading ·</span>
     <span id="btc-readout">· btc ·</span>
+    <span id="aqi-readout">· aqi ·</span>
   </div>
 </footer>
 
 <script>
-// ── TOD stroke ──
+// ── TOD stroke ──────────────────────────────────────────────────
 let todStrokeColor = '#2D5A3D';
 function hexToRgb(hex){hex=hex.trim();return[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];}
 
-// ── Background waves ──
+// ── Background waves ────────────────────────────────────────────
 const bgSvg=document.getElementById('data-canvas');
 let bgLines=[],bgT=0;
 const vW=()=>window.innerWidth,vH=()=>window.innerHeight;
@@ -556,8 +338,7 @@ function renderBg(){
 function bgTick(){bgT+=0.005;renderBg();requestAnimationFrame(bgTick);}
 initBgLines();bgTick();window.addEventListener('resize',initBgLines);
 
-
-// ── Spectrum ──
+// ── Spectrum canvas ─────────────────────────────────────────────
 const specEl=document.getElementById('spectrum-canvas'),spec2d=specEl.getContext('2d');
 let toneAnalyser=null,specT=0,isPlaying=false;
 function resizeSpec(){specEl.width=specEl.offsetWidth*devicePixelRatio;specEl.height=specEl.offsetHeight*devicePixelRatio;}
@@ -584,7 +365,7 @@ function drawSpectrum(){
 }
 drawSpectrum();
 
-// ── Live data ──
+// ── Live data ───────────────────────────────────────────────────
 const liveData={
   temp:   {norm:0.45,display:'—',label:'Temperature'},
   wind:   {norm:0.25,display:'—',label:'Wind Speed'},
@@ -592,8 +373,10 @@ const liveData={
   subway: {norm:0.3, display:'—',label:'L Train Delay'},
   market: {norm:0.5, display:'—',label:'BTC-USD'},
   time:   {norm:0.5, display:'—',label:'Hour of Day'},
+  aqi:    {norm:0.1, display:'—',label:'AQI'},
 };
 function getSolarNorm(){const now=new Date(),h=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;return(Math.sin((h/24)*Math.PI*2-Math.PI/2)+1)/2;}
+function setPoem(id,val){const el=document.getElementById(id);if(!el)return;el.textContent=val;el.classList.remove('loading');}
 function updateTimeStem(){
   const now=new Date();
   const hh=String(now.getHours()).padStart(2,'0'),mm=String(now.getMinutes()).padStart(2,'0');
@@ -602,12 +385,7 @@ function updateTimeStem(){
   setPoem('poem-time',`${hh}:${mm}`);
   document.getElementById('nav-status').textContent=`· live · nyc · ${hh}:${mm} ·`;
   const lb=document.getElementById('mech-live-time');if(lb)lb.textContent=`${hh}:${mm}`;
-}
-function setPoem(id,val){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.textContent=val;
-  el.classList.remove('loading');
+  const lb2=document.getElementById('mech-live-kick');if(lb2)lb2.textContent=`${hh}:${mm}`;
 }
 updateTimeStem();setInterval(updateTimeStem,30000);
 
@@ -627,6 +405,8 @@ async function fetchWeather(){
     const lt=document.getElementById('mech-live-temp');if(lt)lt.textContent=Math.round(t)+'°F';
     const ls=document.getElementById('mech-live-snow');if(ls)ls.textContent=p.toFixed(1)+' mm';
     const lw=document.getElementById('mech-live-wind');if(lw)lw.textContent=Math.round(w)+' mph';
+    const lt2=document.getElementById('mech-live-piano');if(lt2)lt2.textContent=Math.round(t)+'°F';
+    const lw2=document.getElementById('mech-live-synth');if(lw2)lw2.textContent=Math.round(w)+' mph';
   }catch(e){console.warn('Weather:',e.message);}
 }
 fetchWeather();setInterval(fetchWeather,60000);
@@ -639,16 +419,40 @@ async function fetchMTA(){
     liveData.subway={norm:d.norm,display:d.display,label:'L Train',raw:d.combined};
     setPoem('poem-subway',d.display);
     const lm=document.getElementById('mech-live-subway');if(lm)lm.textContent=d.display;
+    const lm2=document.getElementById('mech-live-perc');if(lm2)lm2.textContent=d.display;
   }catch(e){console.warn('MTA:',e.message);}
 }
 fetchMTA();setInterval(fetchMTA,60000);
+
+async function fetchAQI(){
+  try{
+    const res=await fetch('https://air-quality-api.open-meteo.com/v1/air-quality?latitude=40.7128&longitude=-74.0060&current=us_aqi',{signal:AbortSignal.timeout(6000)});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const d=await res.json();
+    const aqi=Math.round(d.current.us_aqi);
+    const norm=Math.min(1,aqi/150);
+    let aqiLabel=aqi<=50?'Good':aqi<=100?'Moderate':aqi<=150?'Unhealthy*':'Unhealthy';
+    liveData.aqi={norm,display:`AQI ${aqi}`,label:'AQI'};
+    setPoem('poem-aqi',`AQI ${aqi}`);
+    document.getElementById('aqi-readout').textContent=`· AQI ${aqi} · ${aqiLabel} ·`;
+    const la=document.getElementById('mech-live-global');if(la)la.textContent=`AQI ${aqi}`;
+    // Update global AQI filter
+    if(aqiFilterNode){
+      const freq=2000+18000*(1-norm);
+      aqiFilterNode.frequency.setTargetAtTime(freq,Tone.now(),3.0);
+    }
+  }catch(e){
+    console.warn('AQI:',e.message);
+    setPoem('poem-aqi','—');
+  }
+}
+fetchAQI();setInterval(fetchAQI,300000);
 
 const BTC_DELTA_SENSITIVITY=200,btcHistory=[];
 let btcCurrentPrice=null;
 function computeBtcDeltaNorm(){
   if(!btcCurrentPrice||btcHistory.length<2)return 0.5;
-  const ref=btcHistory.find(p=>p.time>=Date.now()-60000);
-  if(!ref)return 0.5;
+  const ref=btcHistory.find(p=>p.time>=Date.now()-60000);if(!ref)return 0.5;
   return Math.max(0,Math.min(1,0.5+(btcCurrentPrice-ref.price)/(BTC_DELTA_SENSITIVITY*2)));
 }
 function formatBtcDelta(d){if(Math.abs(d)<0.01)return'';return(d>0?' ↑':' ↓')+'$'+Math.round(Math.abs(d)).toLocaleString();}
@@ -670,6 +474,7 @@ function connectCoinbase(){
         setPoem('poem-market',`$${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)}`);
         document.getElementById('btc-readout').textContent=`· BTC $${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)} ·`;
         const lmk=document.getElementById('mech-live-market');if(lmk)lmk.textContent=`$${Math.round(price).toLocaleString()}`;
+        const lh=document.getElementById('mech-live-hats');if(lh)lh.textContent=`$${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)}`;
       }
     }catch(err){}
   };
@@ -678,8 +483,50 @@ function connectCoinbase(){
 }
 connectCoinbase();
 
-// ── Track config ──
+// ── Track configs ────────────────────────────────────────────────
+const TRACK1_POEM=[
+  {label:'L Train',     id:'poem-subway', sub:'drums · bitcrush · feedback'},
+  {label:'Temperature', id:'poem-temp',   sub:'lead · reverb · chorus'},
+  {label:'Precipitation',id:'poem-snow',  sub:'lead · autowah · vibrato'},
+  {label:'Wind',        id:'poem-wind',   sub:'bass · filter · distortion'},
+  {label:'BTC-USD',     id:'poem-market', sub:'keys · freq shift · tremolo'},
+  {label:'Hour of Day', id:'poem-time',   sub:'perc · highpass · bitcrush'},
+];
+const TRACK2_POEM=[
+  {label:'L Train',     id:'poem-subway', sub:'perc · reverb · phaser'},
+  {label:'Temperature', id:'poem-temp',   sub:'piano · reverb · chorus'},
+  {label:'Wind',        id:'poem-wind',   sub:'synth · lfo · filter'},
+  {label:'BTC-USD',     id:'poem-market', sub:'hats · delay · rattle'},
+  {label:'Hour of Day', id:'poem-time',   sub:'kick · anchor · fixed'},
+  {label:'AQI · NYC',   id:'poem-aqi',    sub:'global · master filter'},
+];
+const TRACK2_STEMS_CFG=[
+  {key:'kick',  file:'dry_stems_2/kick_dry.mp3',  label:'Kick',       source:'Anchor',             target:'→ no effects · fixed',         noFx:true},
+  {key:'perc',  file:'dry_stems_2/perc_dry.mp3',  label:'Percussion', source:'MTA · L Train',      target:'→ reverb · phaser'},
+  {key:'hats',  file:'dry_stems_2/hats_dry.mp3',  label:'Hi-Hats',    source:'Markets · BTC-USD',  target:'→ delay · rattle · reverb'},
+  {key:'piano', file:'dry_stems_2/piano_dry.mp3', label:'Piano',      source:'Weather · Temp',     target:'→ reverb · chorus'},
+  {key:'synth', file:'dry_stems_2/synth_dry.mp3', label:'Synth Pad',  source:'Weather · Wind',     target:'→ lfo filter · chorus'},
+];
+const MECH_LOGIC_1={
+  subway:'L Train delay in minutes maps to drum bit depth. 0 min = 8 bits (clean). 18 min = 3 bits (destroyed).',
+  snow:'Precipitation rate maps to autowah intensity, vibrato depth, and autofilter sweep. No snow = dry. Blizzard = fully processed.',
+  temp:'Temperature maps to reverb wet mix, ping-pong delay, and chorus depth. Cold = tight and dry. Hot = wet and smeared.',
+  wind:'Wind speed maps to low-pass filter cutoff and distortion. Still = open and full. Storm = filtered and distorted.',
+  market:'BTC price change over 60s maps to frequency shift (±26 Hz) and tremolo rate. Rising = shift up. Falling = shift down.',
+  time:'Hour of day (solar arc) maps to high-pass filter and bit depth. Night = dark and crushed. Midday = bright and clean.',
+};
+const MECH_LOGIC_2={
+  kick:'The kick is the fixed anchor. It does not change. Every effect in the mix moves around it.',
+  perc:'L Train delay maps to reverb room size and phaser sweep rate. A delayed train opens the space around the percussion.',
+  hats:'BTC 60-second price delta maps to delay feedback and wet mix. Market movement creates rhythmic rattle. Stability = dry hats.',
+  piano:'Temperature maps to reverb decay length and chorus depth. Cold = long, cold reverb. Warm = closer, wider, more present.',
+  synth:'Wind speed maps to autofilter sweep depth and rate. Still air = slow, breathing pad. High wind = fast, restless filter.',
+  global:'NYC Air Quality Index maps to a master lowpass filter across the entire mix. Clean air = full spectrum open. Poor air = rolled off, muffled.',
+};
+
+// ── NORM_FNS (both tracks) ───────────────────────────────────────
 const NORM_FNS={
+  // Track 1
   'subway.bits':     v=>(8-v)/5,
   'subway.filter':   v=>(v-300)/3500,
   'subway.feedback': v=>(v-10)/55,
@@ -696,101 +543,69 @@ const NORM_FNS={
   'market.tremolo':  v=>(v-0.5)/7.5,
   'time.hipass':     v=>1-(v-80)/2120,
   'time.bits':       v=>(v-3)/5,
-};
-const MECH_LOGIC={
-  subway:'L Train delay in minutes maps to drum bit depth. 0 min = 8 bits (clean). 18 min = 3 bits (destroyed).',
-  snow:'Precipitation rate maps to autowah intensity, vibrato depth, and autofilter sweep. No snow = dry. Blizzard = fully processed.',
-  temp:'Temperature maps to reverb wet mix, ping-pong delay, and chorus depth. Cold = tight and dry. Hot = wet and smeared.',
-  wind:'Wind speed maps to low-pass filter cutoff and distortion. Still = open and full. Storm = filtered and distorted.',
-  market:'BTC price change over 60s maps to frequency shift (±26 Hz) and tremolo rate. Rising = shift up. Falling = shift down.',
-  time:'Hour of day (solar arc) maps to high-pass filter and bit depth. Night = dark and crushed. Midday = bright and clean.',
+  // Track 2
+  'perc.roomSize':   v=>v,
+  'perc.phaserRate': v=>v/3,
+  'hats.delayWet':   v=>v/100,
+  'hats.reverbWet':  v=>v/100,
+  'piano.reverbWet': v=>v/100,
+  'piano.chorusDepth': v=>v/100,
+  'synth.filterWet': v=>v/100,
+  'synth.chorusDepth': v=>v/100,
 };
 
-let TRACK=null,STEMS=[];
+// ── Track state ──────────────────────────────────────────────────
+let currentTrack=1;
+let TRACK=null; // loaded from track.json (track 1)
+let STEMS=[]; // active stems array
+const stemData1={};
+const stemData2={};
+let activeStemData=stemData1;
 let fxPanelConfig={},fxDisplay={};
+let fxPanelConfig1={},fxDisplay1={};
+let fxPanelConfig2={},fxDisplay2={};
+const TRACK1_STEMS_KEYS=['subway','snow','temp','wind','market','time'];
+const TRACK2_STEMS_KEYS=['kick','perc','hats','piano','synth'];
 
-function buildFromTrack(track){
-  TRACK=track;STEMS=track.stems.map(s=>s.key);
-  document.title=`doux — ${track.title}`;
-
-  document.getElementById('stems-grid').innerHTML=track.stems.map(s=>`
-    <div class="stem-tile" id="tile-${s.key}" data-stem="${s.key}">
-      <div class="stem-badge" id="badge-${s.key}">dry</div>
-      <div class="stem-source">${s.source}</div>
-      <div class="stem-param"${s.key==='time'?' id="time-display"':''}>${s.key==='time'?'—:—':s.label}</div>
-      <div class="stem-target">${s.target}</div>
-      <canvas class="stem-canvas" id="canvas-${s.key}"></canvas>
-      <button class="stem-mute" id="mute-${s.key}">mute</button>
-    </div>
-  `).join('');
-
-  document.getElementById('mechanism-grid').innerHTML=track.stems.map((s,i)=>`
-    <div class="mech-cell">
-      <div class="mech-index">0${i+1}</div>
-      <div class="mech-source">${s.source}</div>
-      <div class="mech-stem">${s.label}</div>
-      <div class="mech-target">${s.target}</div>
-      <div class="mech-logic">${MECH_LOGIC[s.key]||''}</div>
-      <span class="mech-live" id="mech-live-${s.key}">—</span>
-    </div>
-  `).join('');
-
-  track.stems.forEach(s=>{
-    fxPanelConfig[s.key]={
-      title:s.fxPanel.title,
-      rows:s.fxPanel.rows.map(r=>({...r,normFn:NORM_FNS[`${s.key}.${r.id}`]||(v=>v)})),
-    };
-  });
-  fxDisplay={
-    subway:{bits:8,filter:2000,feedback:20},
-    snow:{wah:200,autoFilter:0,vibrato:4,pump:100},
-    temp:{ping:0,chorus:15,reverb:5},
-    wind:{filter:800,dist:0},
-    market:{shift:'0.0',tremolo:1},
-    time:{hipass:1200,bits:8},
-  };
-  attachTileInteractions();
-  attachMuteInteractions();
-  initStemCanvases();
-  drawStemCanvases();
-  updateTimeStem();
-}
-
-async function loadTrack(){
-  try{
-    const res=await fetch('track.json');
-    if(!res.ok)throw new Error(`track.json ${res.status}`);
-    buildFromTrack(await res.json());
-  }catch(e){
-    console.error('track.json:',e);
+// ── Shared audio chain (created once) ───────────────────────────
+let masterLimiter=null,masterCompressor=null,aqiFilterNode=null;
+let sharedChainReady=false;
+function createSharedChain(){
+  if(sharedChainReady)return;
+  masterLimiter=new Tone.Limiter(-3).toDestination();
+  masterCompressor=new Tone.Compressor({threshold:-18,knee:8,ratio:4,attack:0.003,release:0.25}).connect(masterLimiter);
+  aqiFilterNode=new Tone.Filter({frequency:20000,type:'lowpass',rolloff:-12}).connect(masterCompressor);
+  toneAnalyser=new Tone.Analyser('fft',2048);
+  aqiFilterNode.connect(toneAnalyser);
+  sharedChainReady=true;
+  // Apply current AQI immediately
+  if(liveData.aqi.norm>0){
+    const freq=2000+18000*(1-liveData.aqi.norm);
+    aqiFilterNode.frequency.setValueAtTime(freq,Tone.now());
   }
 }
 
-// ── Audio ──
-let isReady=false,initInProgress=false;
-const stemData={};
+// ── initAudio1 ───────────────────────────────────────────────────
+let isReady1=false,isReady2=false,initInProgress=false;
 function setStatus(msg){document.getElementById('player-status').textContent=msg;}
+const FADE_DURATION=(8*4*60)/127; // ~15.1s at 127 BPM
 
-const FADE_DURATION = (8 * 4 * 60) / 127;
-
-async function initAudio(){
-  if(initInProgress||isReady)return isReady;
+async function initAudio1(){
+  if(isReady1)return true;
   initInProgress=true;
-  const loadEl=document.getElementById('track-loading');
-  loadEl.classList.add('visible');
+  document.getElementById('track-loading').classList.add('visible');
   setStatus('· loading ·');
-  STEMS.forEach(k=>{stemData[k]={player:null,dryGain:null,wetGain:null,masterGain:null,fx:{},analyser:null,active:false,muted:false};});
+  TRACK1_STEMS_KEYS.forEach(k=>{stemData1[k]={player:null,dryGain:null,wetGain:null,masterGain:null,fx:{},analyser:null,active:false,muted:false};});
   try{
     await Tone.start();
+    createSharedChain();
     const TRACK_BPM=TRACK.bpm;
-    const masterLimiter=new Tone.Limiter(-3).toDestination();
-    const masterCompressor=new Tone.Compressor({threshold:-18,knee:8,ratio:4,attack:0.003,release:0.25}).connect(masterLimiter);
-    const masterBus=new Tone.Gain(0).connect(masterCompressor);
-    toneAnalyser=new Tone.Analyser('fft',2048);masterBus.connect(toneAnalyser);
+    const masterBus=new Tone.Gain(0).connect(aqiFilterNode);
+    stemData1._masterBus=masterBus;
     const revTemp=new Tone.Reverb({decay:2.5,preDelay:0.01});await revTemp.generate();
 
-    function makeStemRouting(key,fxNodes){
-      const s=stemData[key],stemCfg=TRACK.stems.find(x=>x.key===key);
+    function makeRoute1(key,fxNodes){
+      const s=stemData1[key],stemCfg=TRACK.stems.find(x=>x.key===key);
       s.masterGain=new Tone.Gain(1).connect(masterBus);
       s.dryGain=new Tone.Gain(1).connect(s.masterGain);
       s.wetGain=new Tone.Gain(0).connect(s.masterGain);
@@ -801,210 +616,494 @@ async function initAudio(){
       s.analyser=new Tone.Analyser('fft',512);s.masterGain.connect(s.analyser);
     }
 
-    stemData.subway.fx.bits=new Tone.BitCrusher(8);
-    stemData.subway.fx.filter=new Tone.Filter({frequency:2000,type:'lowpass'});
-    stemData.subway.fx.delay=new Tone.FeedbackDelay({delayTime:'8n',feedback:0.2,wet:0.5});
-    makeStemRouting('subway',[stemData.subway.fx.bits,stemData.subway.fx.filter,stemData.subway.fx.delay]);
+    stemData1.subway.fx.bits=new Tone.BitCrusher(8);
+    stemData1.subway.fx.filter=new Tone.Filter({frequency:2000,type:'lowpass'});
+    stemData1.subway.fx.delay=new Tone.FeedbackDelay({delayTime:'8n',feedback:0.2,wet:0.5});
+    makeRoute1('subway',[stemData1.subway.fx.bits,stemData1.subway.fx.filter,stemData1.subway.fx.delay]);
 
     const snowLfoFreq=(TRACK_BPM/60)/2;
-    stemData.snow.fx.wah=new Tone.AutoWah({baseFrequency:100,octaves:3,sensitivity:-20,Q:2,gain:2,wet:0.8});
-    stemData.snow.fx.autoFilter=new Tone.AutoFilter({frequency:snowLfoFreq,baseFrequency:200,octaves:3,wet:0.0}).start();
-    stemData.snow.fx.vibrato=new Tone.Vibrato({frequency:4,depth:0.1,wet:0.6});
-    stemData.snow.fx.pumpGain=new Tone.Gain(1);
-    stemData.snow.fx.pumpLfo=new Tone.LFO({type:'sawtooth',frequency:TRACK_BPM/60/2,min:0.85,max:1.0,phase:270}).start();
-    stemData.snow.fx.pumpLfo.connect(stemData.snow.fx.pumpGain.gain);
-    // Tame autowah harshness: fixed lowpass at 5kHz + -6dB gain
-    stemData.snow.fx.hiCut=new Tone.Filter({frequency:5000,type:'lowpass',rolloff:-12});
-    stemData.snow.fx.levelTrim=new Tone.Gain(0.5); // -6dB
-    makeStemRouting('snow',[stemData.snow.fx.wah,stemData.snow.fx.autoFilter,stemData.snow.fx.vibrato,stemData.snow.fx.pumpGain,stemData.snow.fx.hiCut,stemData.snow.fx.levelTrim]);
+    stemData1.snow.fx.wah=new Tone.AutoWah({baseFrequency:100,octaves:3,sensitivity:-20,Q:2,gain:2,wet:0.8});
+    stemData1.snow.fx.autoFilter=new Tone.AutoFilter({frequency:snowLfoFreq,baseFrequency:200,octaves:3,wet:0.0}).start();
+    stemData1.snow.fx.vibrato=new Tone.Vibrato({frequency:4,depth:0.1,wet:0.6});
+    stemData1.snow.fx.pumpGain=new Tone.Gain(1);
+    stemData1.snow.fx.pumpLfo=new Tone.LFO({type:'sawtooth',frequency:TRACK_BPM/60/2,min:0.85,max:1.0,phase:270}).start();
+    stemData1.snow.fx.pumpLfo.connect(stemData1.snow.fx.pumpGain.gain);
+    stemData1.snow.fx.hiCut=new Tone.Filter({frequency:5000,type:'lowpass',rolloff:-12});
+    stemData1.snow.fx.levelTrim=new Tone.Gain(0.5);
+    makeRoute1('snow',[stemData1.snow.fx.wah,stemData1.snow.fx.autoFilter,stemData1.snow.fx.vibrato,stemData1.snow.fx.pumpGain,stemData1.snow.fx.hiCut,stemData1.snow.fx.levelTrim]);
 
-    stemData.temp.fx.ping=new Tone.PingPongDelay({delayTime:'8n',feedback:0.1,wet:0.0});
-    stemData.temp.fx.chorus=new Tone.Chorus({frequency:2,delayTime:2.5,depth:0.15,wet:0.3}).start();
-    stemData.temp.fx.reverb=revTemp;
-    makeStemRouting('temp',[stemData.temp.fx.ping,stemData.temp.fx.chorus,stemData.temp.fx.reverb]);
+    stemData1.temp.fx.ping=new Tone.PingPongDelay({delayTime:'8n',feedback:0.1,wet:0.0});
+    stemData1.temp.fx.chorus=new Tone.Chorus({frequency:2,delayTime:2.5,depth:0.15,wet:0.3}).start();
+    stemData1.temp.fx.reverb=revTemp;
+    makeRoute1('temp',[stemData1.temp.fx.ping,stemData1.temp.fx.chorus,stemData1.temp.fx.reverb]);
 
-    stemData.wind.fx.filter=new Tone.Filter({frequency:800,type:'lowpass'});
-    stemData.wind.fx.dist=new Tone.Distortion({distortion:0.0,wet:0.0});
-    makeStemRouting('wind',[stemData.wind.fx.filter,stemData.wind.fx.dist]);
+    stemData1.wind.fx.filter=new Tone.Filter({frequency:800,type:'lowpass'});
+    stemData1.wind.fx.dist=new Tone.Distortion({distortion:0.0,wet:0.0});
+    makeRoute1('wind',[stemData1.wind.fx.filter,stemData1.wind.fx.dist]);
 
-    stemData.market.fx.freqShift=new Tone.FrequencyShifter(0);
-    stemData.market.fx.tremolo=new Tone.Tremolo({frequency:1,depth:0.1,wet:0.5}).start();
-    makeStemRouting('market',[stemData.market.fx.freqShift,stemData.market.fx.tremolo]);
+    stemData1.market.fx.freqShift=new Tone.FrequencyShifter(0);
+    stemData1.market.fx.tremolo=new Tone.Tremolo({frequency:1,depth:0.1,wet:0.5}).start();
+    makeRoute1('market',[stemData1.market.fx.freqShift,stemData1.market.fx.tremolo]);
 
-    stemData.time.fx.hipass=new Tone.Filter({frequency:1200,type:'highpass'});
-    stemData.time.fx.bits=new Tone.BitCrusher(8);
-    makeStemRouting('time',[stemData.time.fx.hipass,stemData.time.fx.bits]);
+    stemData1.time.fx.hipass=new Tone.Filter({frequency:1200,type:'highpass'});
+    stemData1.time.fx.bits=new Tone.BitCrusher(8);
+    makeRoute1('time',[stemData1.time.fx.hipass,stemData1.time.fx.bits]);
 
     await Promise.race([Tone.loaded(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),25000))]);
-
-    stemData._masterBus = masterBus;
-
-    isReady=true;initInProgress=false;
-    loadEl.classList.remove('visible');
+    isReady1=true;initInProgress=false;
+    document.getElementById('track-loading').classList.remove('visible');
+    setStatus('· ready ·');
     return true;
   }catch(err){
-    console.error('Audio init:',err);
-    setStatus('· error: '+err.message+' ·');
-    initInProgress=false;
-    document.getElementById('track-loading').classList.remove('visible');
+    console.error('Audio1:',err);setStatus('· error: '+err.message+' ·');
+    initInProgress=false;document.getElementById('track-loading').classList.remove('visible');
     return false;
   }
 }
 
-function startAll(){
-  const t=Tone.now()+0.1;
-  STEMS.forEach(k=>{if(stemData[k]?.player?.loaded)stemData[k].player.start(t);});
-  if(stemData._masterBus){
-    stemData._masterBus.gain.setValueAtTime(0, t);
-    stemData._masterBus.gain.linearRampToValueAtTime(0.72, t + FADE_DURATION);
+// ── initAudio2 ───────────────────────────────────────────────────
+async function initAudio2(){
+  if(isReady2)return true;
+  initInProgress=true;
+  document.getElementById('track-loading').classList.add('visible');
+  setStatus('· loading ·');
+  TRACK2_STEMS_KEYS.forEach(k=>{stemData2[k]={player:null,dryGain:null,wetGain:null,masterGain:null,fx:{},analyser:null,active:false,muted:false};});
+  try{
+    await Tone.start();
+    createSharedChain();
+    const masterBus=new Tone.Gain(0).connect(aqiFilterNode);
+    stemData2._masterBus=masterBus;
+
+    function makeRoute2(key,fxNodes){
+      const s=stemData2[key];
+      const stemCfg=TRACK2_STEMS_CFG.find(x=>x.key===key);
+      s.masterGain=new Tone.Gain(1).connect(masterBus);
+      s.dryGain=new Tone.Gain(1).connect(s.masterGain);
+      s.wetGain=new Tone.Gain(0).connect(s.masterGain);
+      s.player=new Tone.Player({url:stemCfg.file,loop:true,autostart:false});
+      s.player.connect(s.dryGain);
+      if(fxNodes.length>0){
+        let node=s.player;fxNodes.forEach(fx=>{node.connect(fx);node=fx;});
+        node.connect(s.wetGain);
+      }
+      s.analyser=new Tone.Analyser('fft',512);s.masterGain.connect(s.analyser);
+    }
+
+    // Kick — dry only, no effects
+    makeRoute2('kick',[]);
+
+    // Perc → Subway: Freeverb + Phaser
+    stemData2.perc.fx.reverb=new Tone.Freeverb({roomSize:0.3,dampening:4000,wet:0.0});
+    stemData2.perc.fx.phaser=new Tone.Phaser({frequency:0.5,octaves:2,baseFrequency:500,wet:0.0});
+    makeRoute2('perc',[stemData2.perc.fx.reverb,stemData2.perc.fx.phaser]);
+
+    // Hats → BTC: Triplet delay rattle + Freeverb
+    stemData2.hats.fx.delay=new Tone.FeedbackDelay({delayTime:'8t',feedback:0.35,wet:0.0});
+    stemData2.hats.fx.reverb=new Tone.Freeverb({roomSize:0.2,dampening:5000,wet:0.0});
+    stemData2.hats.fx.hpFilter=new Tone.Filter({frequency:6000,type:'highpass'});
+    makeRoute2('hats',[stemData2.hats.fx.hpFilter,stemData2.hats.fx.delay,stemData2.hats.fx.reverb]);
+
+    // Piano → Temp: Freeverb + Chorus
+    stemData2.piano.fx.reverb=new Tone.Freeverb({roomSize:0.5,dampening:2000,wet:0.0});
+    stemData2.piano.fx.chorus=new Tone.Chorus({frequency:1.5,delayTime:3.5,depth:0.08,wet:0.0}).start();
+    makeRoute2('piano',[stemData2.piano.fx.reverb,stemData2.piano.fx.chorus]);
+
+    // Synth → Wind: Sawtooth AutoFilter (triplet LFO ~3Hz) + Chorus + Freeverb
+    stemData2.synth.fx.autoFilter=new Tone.AutoFilter({
+      frequency:3, // ~quarter note triplet at 120 BPM
+      type:'sawtooth', // asymmetric sweep = swing feel
+      baseFrequency:300,
+      octaves:3.0,
+      wet:0.0
+    }).start();
+    stemData2.synth.fx.chorus=new Tone.Chorus({frequency:1,delayTime:4,depth:0.12,wet:0.25}).start();
+    stemData2.synth.fx.reverb=new Tone.Freeverb({roomSize:0.65,dampening:1500,wet:0.2});
+    makeRoute2('synth',[stemData2.synth.fx.autoFilter,stemData2.synth.fx.chorus,stemData2.synth.fx.reverb]);
+
+    await Promise.race([Tone.loaded(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),25000))]);
+
+    // Build track 2 fxPanel config
+    fxPanelConfig2={
+      kick:{ title:'Kick · Anchor', rows:[], note:'The kick is the fixed point. No data effects. Everything moves around it.' },
+      perc:{ title:'L Train → Perc', rows:[
+        {id:'roomSize',label:'Room Size',unit:'',src:'L Train delay',normFn:NORM_FNS['perc.roomSize']||(v=>v)},
+        {id:'phaserRate',label:'Phaser Rate',unit:'Hz',src:'L Train delay',normFn:NORM_FNS['perc.phaserRate']||(v=>v/3)},
+      ]},
+      hats:{ title:'BTC-USD → Hi-Hats', rows:[
+        {id:'delayWet',label:'Delay Wet',unit:'%',src:'BTC 60s delta',normFn:NORM_FNS['hats.delayWet']||(v=>v/100)},
+        {id:'reverbWet',label:'Reverb Wet',unit:'%',src:'BTC 60s delta',normFn:NORM_FNS['hats.reverbWet']||(v=>v/100)},
+      ]},
+      piano:{ title:'Temperature → Piano', rows:[
+        {id:'reverbWet',label:'Reverb Wet',unit:'%',src:'Temperature',normFn:NORM_FNS['piano.reverbWet']||(v=>v/100)},
+        {id:'chorusDepth',label:'Chorus Depth',unit:'%',src:'Temperature',normFn:NORM_FNS['piano.chorusDepth']||(v=>v/100)},
+      ]},
+      synth:{ title:'Wind → Synth Pad', rows:[
+        {id:'filterWet',label:'Filter Wet',unit:'%',src:'Wind speed',normFn:NORM_FNS['synth.filterWet']||(v=>v/100)},
+        {id:'chorusDepth',label:'Chorus Depth',unit:'%',src:'Wind speed',normFn:NORM_FNS['synth.chorusDepth']||(v=>v/100)},
+      ]},
+    };
+    fxDisplay2={
+      kick:{},
+      perc:{roomSize:0.1,phaserRate:0.5},
+      hats:{delayWet:0,reverbWet:5},
+      piano:{reverbWet:5,chorusDepth:5},
+      synth:{filterWet:0,chorusDepth:25},
+    };
+
+    isReady2=true;initInProgress=false;
+    document.getElementById('track-loading').classList.remove('visible');
+    setStatus('· ready ·');
+    return true;
+  }catch(err){
+    console.error('Audio2:',err);setStatus('· error: '+err.message+' ·');
+    initInProgress=false;document.getElementById('track-loading').classList.remove('visible');
+    return false;
   }
-  STEMS.forEach(key=>{
-    const s=stemData[key];if(!s||!s.dryGain)return;
-    s.active=true;
-    s.dryGain.gain.setValueAtTime(0,t);
-    s.wetGain.gain.setValueAtTime(1,t);
-    const tile=document.getElementById('tile-'+key);
-    const badge=document.getElementById('badge-'+key);
-    if(tile)tile.classList.add('active');
-    if(badge)badge.textContent='data active';
+}
+
+// ── Start/stop ───────────────────────────────────────────────────
+function startTrack(n){
+  const sd=n===1?stemData1:stemData2;
+  const stems=n===1?TRACK1_STEMS_KEYS:TRACK2_STEMS_KEYS;
+  const fadeDur=n===1?FADE_DURATION:(8*4*60)/120;
+  const t=Tone.now()+0.1;
+  stems.forEach(k=>{if(sd[k]?.player?.loaded)sd[k].player.start(t);});
+  if(sd._masterBus){
+    sd._masterBus.gain.setValueAtTime(0,t);
+    sd._masterBus.gain.linearRampToValueAtTime(0.72,t+fadeDur);
+  }
+  // Activate all stems with data by default
+  stems.forEach(key=>{
+    const s=sd[key];if(!s||!s.dryGain)return;
+    const cfg=n===2?TRACK2_STEMS_CFG.find(x=>x.key===key):null;
+    if(n===2&&cfg?.noFx){
+      // Kick stays dry always
+      s.active=false;
+      s.dryGain.gain.setValueAtTime(1,t);
+      s.wetGain.gain.setValueAtTime(0,t);
+      const tile=document.getElementById('tile-'+key);
+      if(tile){tile.classList.remove('active');tile.classList.add('anchor');}
+      const badge=document.getElementById('badge-'+key);
+      if(badge)badge.textContent='anchor';
+    }else{
+      s.active=true;
+      s.dryGain.gain.setValueAtTime(0,t);
+      s.wetGain.gain.setValueAtTime(1,t);
+      const tile=document.getElementById('tile-'+key);
+      const badge=document.getElementById('badge-'+key);
+      if(tile)tile.classList.add('active');
+      if(badge)badge.textContent='data active';
+    }
   });
 }
 
-function stopAll(){
-  STEMS.forEach(k=>{try{stemData[k]?.player?.stop();}catch(e){}});
-  if(stemData._masterBus){stemData._masterBus.gain.cancelScheduledValues(Tone.now());stemData._masterBus.gain.setValueAtTime(0,Tone.now());}
+function stopCurrentTrack(){
+  const sd=activeStemData;
+  STEMS.forEach(k=>{try{sd[k]?.player?.stop();}catch(e){}});
+  if(sd._masterBus){sd._masterBus.gain.cancelScheduledValues(Tone.now());sd._masterBus.gain.setValueAtTime(0,Tone.now());}
   STEMS.forEach(key=>{
-    const s=stemData[key];if(!s)return;
+    const s=sd[key];if(!s)return;
     s.active=false;
     const tile=document.getElementById('tile-'+key);
     const badge=document.getElementById('badge-'+key);
-    if(tile)tile.classList.remove('active');
+    if(tile){tile.classList.remove('active');tile.classList.remove('anchor');}
     if(badge)badge.textContent='dry';
   });
 }
 
-let gestureListened = false;
-let audioStarted = false;
+// ── Track switching ──────────────────────────────────────────────
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-function dismissEntry(){
-  if(gestureListened)return;
-  gestureListened=true;
-  const overlay=document.getElementById('entry-overlay');
-  overlay.classList.add('dismissed');
-  setTimeout(async()=>{
-    if(audioStarted)return;
-    audioStarted=true;
-    if(!TRACK){
-      const wait=setInterval(async()=>{
-        if(TRACK){clearInterval(wait);await _startPlayback();}
-      },100);
-    }else{
-      await _startPlayback();
-    }
-  },600);
-}
+async function switchTrack(n){
+  if(n===currentTrack)return;
+  if(initInProgress)return;
 
-async function _startPlayback(){
-  const ok=await initAudio();
-  if(!ok)return;
-  startAll();
-  isPlaying=true;
-  document.getElementById('play-icon').innerHTML='<rect x="0" y="0" width="3" height="12"/><rect x="6" y="0" width="3" height="12"/>';
-  document.getElementById('play-label').textContent='Pause';
-  document.getElementById('master-play-btn').classList.add('playing');
-  setStatus('· playing · blizzard 02.23.26 ·');
-}
+  // Fade out visually
+  ['hero-content','player-content'].forEach(id=>{
+    document.getElementById(id).classList.add('switching');
+  });
+  // Fade out audio
+  const mb=activeStemData._masterBus;
+  if(mb)mb.gain.rampTo(0,0.3);
 
-['click','touchstart','keydown','scroll'].forEach(evt=>{
-  document.addEventListener(evt, dismissEntry, {once:true, passive:true});
-});
+  await sleep(380);
 
-document.getElementById('master-play-btn').addEventListener('click',async()=>{
-  if(typeof Tone==='undefined'){setStatus('· Tone.js not loaded ·');return;}
-  const icon=document.getElementById('play-icon'),label=document.getElementById('play-label'),btn=document.getElementById('master-play-btn');
-  if(!isReady){
-    gestureListened=true;
-    const overlay=document.getElementById('entry-overlay');
-    overlay.classList.add('dismissed');
-    if(!audioStarted){audioStarted=true;await _startPlayback();}
-    return;
-  }
-  if(isPlaying){
-    stopAll();
-    icon.innerHTML='<polygon points="0,0 10,6 0,12"/>';
-    label.textContent='Play';
-    btn.classList.remove('playing');
-    setStatus('· paused ·');
-    isPlaying=false;
+  // Stop current
+  STEMS.forEach(k=>{try{activeStemData[k]?.player?.stop();}catch(e){}});
+  if(fxPanelKey)closeFxPanel();
+
+  currentTrack=n;
+  activeStemData=n===1?stemData1:stemData2;
+  STEMS=n===1?[...TRACK1_STEMS_KEYS]:[...TRACK2_STEMS_KEYS];
+  fxPanelConfig=n===1?fxPanelConfig1:fxPanelConfig2;
+  fxDisplay=n===1?fxDisplay1:fxDisplay2;
+
+  // Rebuild UI
+  renderPoem(n);
+  renderStemsGrid(n);
+  renderMechGrid(n);
+  updateTrackDots(n);
+  document.getElementById('footer-track').textContent=n===1?'blizzard 02.23.26 · nyc':'track 2 · nyc';
+  document.getElementById('player-hint').textContent=n===1?
+    'Click any stem tile to toggle live data on or off — and see the effects it\'s applying in real time.' :
+    'Click any stem tile to toggle live data — kick is the fixed anchor and cannot be modulated.';
+
+  initStemCanvases();
+  attachTileInteractions();
+  attachMuteInteractions();
+  updateTimeStem();
+  fetchWeather(); fetchMTA();
+
+  // Visual in
+  ['hero-content','player-content'].forEach(id=>{
+    document.getElementById(id).classList.remove('switching');
+  });
+
+  // Init and start audio
+  if(n===1){
+    if(!isReady1)await initAudio1();
+    if(isPlaying)startTrack(1);
   }else{
-    startAll();
-    icon.innerHTML='<rect x="0" y="0" width="3" height="12"/><rect x="6" y="0" width="3" height="12"/>';
-    label.textContent='Pause';
-    btn.classList.add('playing');
-    setStatus('· playing · blizzard 02.23.26 ·');
-    isPlaying=true;
+    if(!isReady2)await initAudio2();
+    if(isPlaying)startTrack(2);
   }
+  setStatus(isPlaying?`· playing · track ${n} ·`:'· press play ·');
+}
+
+function updateTrackDots(n){
+  document.getElementById('dot-1').classList.toggle('active',n===1);
+  document.getElementById('dot-2').classList.toggle('active',n===2);
+}
+
+// ── Render functions ─────────────────────────────────────────────
+function renderPoem(n){
+  const lines=n===1?TRACK1_POEM:TRACK2_POEM;
+  document.getElementById('data-poem').innerHTML=lines.map(l=>`
+    <div class="poem-line">
+      <span class="poem-label">${l.label}</span>
+      <span class="poem-value loading" id="${l.id}">—</span>
+      <span class="poem-sub">${l.sub}</span>
+    </div>
+  `).join('');
+  // Populate existing values
+  updateTimeStem();
+  if(liveData.temp.display!=='—')setPoem('poem-temp',liveData.temp.display);
+  if(liveData.wind.display!=='—')setPoem('poem-wind',liveData.wind.display);
+  if(liveData.snow.display!=='—')setPoem('poem-snow',liveData.snow.display);
+  if(liveData.subway.display!=='—')setPoem('poem-subway',liveData.subway.display);
+  if(liveData.market.display!=='—')setPoem('poem-market',liveData.market.display);
+  if(n===2&&liveData.aqi.display!=='—')setPoem('poem-aqi',liveData.aqi.display);
+}
+
+function renderStemsGrid(n){
+  const stms=n===1?(TRACK?TRACK.stems:[]):TRACK2_STEMS_CFG;
+  if(!stms||stms.length===0)return;
+  document.getElementById('stems-grid').innerHTML=stms.map(s=>`
+    <div class="stem-tile${s.noFx?' anchor':''}" id="tile-${s.key}" data-stem="${s.key}">
+      <div class="stem-badge" id="badge-${s.key}">${s.noFx?'anchor':'dry'}</div>
+      <div class="stem-source">${s.source||s.key}</div>
+      <div class="stem-param"${s.key==='time'?' id="time-display"':''}>${s.key==='time'?'—:—':s.label}</div>
+      <div class="stem-target">${s.target||''}</div>
+      <canvas class="stem-canvas" id="canvas-${s.key}"></canvas>
+      <button class="stem-mute" id="mute-${s.key}">${s.noFx?'anchor':'mute'}</button>
+    </div>
+  `).join('');
+}
+
+function renderMechGrid(n){
+  const mechLogic=n===1?MECH_LOGIC_1:MECH_LOGIC_2;
+  const stms=n===1?(TRACK?TRACK.stems:[]):TRACK2_STEMS_CFG;
+  if(!stms||stms.length===0)return;
+  let cells=stms.map((s,i)=>`
+    <div class="mech-cell">
+      <div class="mech-index">0${i+1}</div>
+      <div class="mech-source">${s.source||s.key}</div>
+      <div class="mech-stem">${s.label}</div>
+      <div class="mech-target">${s.target||''}</div>
+      <div class="mech-logic">${mechLogic[s.key]||''}</div>
+      <span class="mech-live" id="mech-live-${s.key}">—</span>
+    </div>
+  `).join('');
+  // Add global AQI cell for track 2
+  if(n===2){
+    cells+=`
+    <div class="mech-cell global-cell">
+      <div class="mech-index">07</div>
+      <div class="mech-source">Air Quality · NYC</div>
+      <div class="mech-stem">Global Filter</div>
+      <div class="mech-target">→ master lowpass · all stems</div>
+      <div class="mech-logic">${mechLogic.global||''}</div>
+      <span class="mech-live" id="mech-live-global">—</span>
+    </div>`;
+  }
+  document.getElementById('mechanism-grid').innerHTML=cells;
+}
+
+// ── Swipe gesture ────────────────────────────────────────────────
+let touchStartX=0,touchStartY=0;
+let mouseStartX=0,mouseIsDown=false;
+
+document.addEventListener('touchstart',e=>{
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=e.changedTouches[0].clientY-touchStartY;
+  if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>55){
+    if(dx<0&&currentTrack===1)switchTrack(2); // swipe left → track 2... wait user said right=2
+    if(dx>0&&currentTrack===2)switchTrack(1); // swipe right → track 1
+    // User said: swipe right = song 2, swipe left = back to song 1
+    // Swipe RIGHT means finger moves RIGHT (positive dx)... let me re-read
+    // "swipe right for song 2, left back to song 1"
+    // Swipe right = finger moves right = positive dx → track 2
+    // But that's a bit unusual (usually right swipe = go back in most UIs)
+    // Following user's specification exactly:
+  }
+},{passive:true});
+
+// Correct interpretation: "swipe right" = drag right = positive dx
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  const dy=e.changedTouches[0].clientY-touchStartY;
+  if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>55){
+    if(dx>0&&currentTrack===1)switchTrack(2); // swipe right → track 2
+    if(dx<0&&currentTrack===2)switchTrack(1); // swipe left → track 1
+  }
+},{passive:true});
+
+// Keyboard arrows
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'&&currentTrack===1)switchTrack(2);
+  if(e.key==='ArrowLeft'&&currentTrack===2)switchTrack(1);
 });
 
-// ── Modulation ──
+// Click dots
+document.getElementById('dot-1').addEventListener('click',()=>{if(currentTrack!==1)switchTrack(1);});
+document.getElementById('dot-2').addEventListener('click',()=>{if(currentTrack!==2)switchTrack(2);});
+
+// ── Modulation ───────────────────────────────────────────────────
 function runModulation(){
-  if(!isReady||!TRACK)return;
-  const now=Tone.now();
-  if(stemData.subway?.active){
-    const v=liveData.subway.norm,bits=Math.round(8-v*5);
-    stemData.subway.fx.bits.bits=bits;
-    stemData.subway.fx.filter.frequency.setTargetAtTime(300+v*3500,now,0.15);
-    stemData.subway.fx.delay.feedback.setTargetAtTime(0.1+v*0.55,now,0.15);
-    fxDisplay.subway={bits,filter:Math.round(300+v*3500),feedback:Math.round((0.1+v*0.55)*100)};
-  }
-  if(stemData.snow?.active){
-    const v=liveData.snow.norm;
-    stemData.snow.fx.wah.baseFrequency=80+(1-v)*300;
-    stemData.snow.fx.wah.sensitivity=-30+v*20;
-    stemData.snow.fx.wah.wet.setTargetAtTime(0.3+v*0.7,now,0.2);
-    stemData.snow.fx.autoFilter.baseFrequency=200+v*1800;
-    stemData.snow.fx.autoFilter.wet.setTargetAtTime(v*0.85,now,0.25);
-    stemData.snow.fx.vibrato.depth.setTargetAtTime(0.05+v*0.4,now,0.25);
-    stemData.snow.fx.vibrato.frequency.setTargetAtTime(2+v*8,now,0.25);
-    stemData.snow.fx.pumpLfo.min=v;
-    fxDisplay.snow={wah:Math.round(80+(1-v)*300),autoFilter:Math.round(v*85),vibrato:+(2+v*8).toFixed(1),pump:Math.round((1-v)*100)};
-  }
-  if(stemData.temp?.active){
-    const v=liveData.temp.norm;
-    stemData.temp.fx.ping.feedback.setTargetAtTime(0.05+v*0.55,now,0.3);
-    stemData.temp.fx.ping.wet.setTargetAtTime(v*0.7,now,0.3);
-    stemData.temp.fx.chorus.depth=0.05+v*0.75;
-    stemData.temp.fx.chorus.wet.setTargetAtTime(0.1+v*0.6,now,0.3);
-    stemData.temp.fx.reverb.wet.rampTo(0.05+v*0.65,0.5);
-    fxDisplay.temp={ping:Math.round(v*70),chorus:Math.round((0.05+v*0.75)*100),reverb:Math.round((0.05+v*0.65)*100)};
-  }
-  if(stemData.wind?.active){
-    const v=liveData.wind.norm;
-    stemData.wind.fx.filter.frequency.setTargetAtTime(100+v*3500,now,0.2);
-    stemData.wind.fx.dist.distortion=v*0.85;
-    stemData.wind.fx.dist.wet.setTargetAtTime(v*0.9,now,0.2);
-    fxDisplay.wind={filter:Math.round(100+v*3500),dist:Math.round(v*100)};
-  }
-  if(stemData.market?.active){
-    const v=liveData.market.norm,shiftHz=(v-0.5)*52,mag=Math.abs(v-0.5)*2;
-    stemData.market.fx.freqShift.frequency.setTargetAtTime(shiftHz,now,0.5);
-    stemData.market.fx.tremolo.frequency.setTargetAtTime(0.5+mag*7.5,now,0.3);
-    stemData.market.fx.tremolo.depth.setTargetAtTime(0.05+mag*0.75,now,0.3);
-    fxDisplay.market={shift:shiftHz.toFixed(1),tremolo:+(0.5+mag*7.5).toFixed(1)};
-  }
-  if(stemData.time?.active){
-    const v=liveData.time.norm,hpFreq=80+(1-v)*2120;
-    stemData.time.fx.hipass.frequency.setTargetAtTime(hpFreq,now,1.0);
-    stemData.time.fx.bits.bits=Math.round(3+v*5);
-    fxDisplay.time={hipass:Math.round(hpFreq),bits:Math.round(3+v*5)};
-  }
+  if(!sharedChainReady||!isPlaying)return;
+  if(currentTrack===1)runModulation1();
+  else runModulation2();
   refreshFxPanel();
 }
+
+function runModulation1(){
+  const now=Tone.now();
+  if(stemData1.subway?.active){
+    const v=liveData.subway.norm,bits=Math.round(8-v*5);
+    stemData1.subway.fx.bits.bits=bits;
+    stemData1.subway.fx.filter.frequency.setTargetAtTime(300+v*3500,now,0.15);
+    stemData1.subway.fx.delay.feedback.setTargetAtTime(0.1+v*0.55,now,0.15);
+    fxDisplay1.subway={bits,filter:Math.round(300+v*3500),feedback:Math.round((0.1+v*0.55)*100)};
+  }
+  if(stemData1.snow?.active){
+    const v=liveData.snow.norm;
+    stemData1.snow.fx.wah.baseFrequency=80+(1-v)*300;
+    stemData1.snow.fx.wah.sensitivity=-30+v*20;
+    stemData1.snow.fx.wah.wet.setTargetAtTime(0.3+v*0.7,now,0.2);
+    stemData1.snow.fx.autoFilter.baseFrequency=200+v*1800;
+    stemData1.snow.fx.autoFilter.wet.setTargetAtTime(v*0.85,now,0.25);
+    stemData1.snow.fx.vibrato.depth.setTargetAtTime(0.05+v*0.4,now,0.25);
+    stemData1.snow.fx.vibrato.frequency.setTargetAtTime(2+v*8,now,0.25);
+    stemData1.snow.fx.pumpLfo.min=v;
+    fxDisplay1.snow={wah:Math.round(80+(1-v)*300),autoFilter:Math.round(v*85),vibrato:+(2+v*8).toFixed(1),pump:Math.round((1-v)*100)};
+  }
+  if(stemData1.temp?.active){
+    const v=liveData.temp.norm;
+    stemData1.temp.fx.ping.feedback.setTargetAtTime(0.05+v*0.55,now,0.3);
+    stemData1.temp.fx.ping.wet.setTargetAtTime(v*0.7,now,0.3);
+    stemData1.temp.fx.chorus.depth=0.05+v*0.75;
+    stemData1.temp.fx.chorus.wet.setTargetAtTime(0.1+v*0.6,now,0.3);
+    stemData1.temp.fx.reverb.wet.rampTo(0.05+v*0.65,0.5);
+    fxDisplay1.temp={ping:Math.round(v*70),chorus:Math.round((0.05+v*0.75)*100),reverb:Math.round((0.05+v*0.65)*100)};
+  }
+  if(stemData1.wind?.active){
+    const v=liveData.wind.norm;
+    stemData1.wind.fx.filter.frequency.setTargetAtTime(100+v*3500,now,0.2);
+    stemData1.wind.fx.dist.distortion=v*0.85;
+    stemData1.wind.fx.dist.wet.setTargetAtTime(v*0.9,now,0.2);
+    fxDisplay1.wind={filter:Math.round(100+v*3500),dist:Math.round(v*100)};
+  }
+  if(stemData1.market?.active){
+    const v=liveData.market.norm,shiftHz=(v-0.5)*52,mag=Math.abs(v-0.5)*2;
+    stemData1.market.fx.freqShift.frequency.setTargetAtTime(shiftHz,now,0.5);
+    stemData1.market.fx.tremolo.frequency.setTargetAtTime(0.5+mag*7.5,now,0.3);
+    stemData1.market.fx.tremolo.depth.setTargetAtTime(0.05+mag*0.75,now,0.3);
+    fxDisplay1.market={shift:shiftHz.toFixed(1),tremolo:+(0.5+mag*7.5).toFixed(1)};
+  }
+  if(stemData1.time?.active){
+    const v=liveData.time.norm,hpFreq=80+(1-v)*2120;
+    stemData1.time.fx.hipass.frequency.setTargetAtTime(hpFreq,now,1.0);
+    stemData1.time.fx.bits.bits=Math.round(3+v*5);
+    fxDisplay1.time={hipass:Math.round(hpFreq),bits:Math.round(3+v*5)};
+  }
+}
+
+function runModulation2(){
+  const now=Tone.now();
+
+  // Perc → Subway: reverb room size + phaser rate
+  if(stemData2.perc?.active){
+    const v=liveData.subway.norm; // 0=no delay, 1=max delay
+    const roomSize=0.1+v*0.85;
+    const phaserRate=0.2+v*2.8;
+    stemData2.perc.fx.reverb.roomSize=roomSize;
+    stemData2.perc.fx.reverb.wet.setTargetAtTime(v*0.8,now,0.3);
+    stemData2.perc.fx.phaser.frequency.setTargetAtTime(phaserRate,now,0.3);
+    stemData2.perc.fx.phaser.wet.setTargetAtTime(v*0.6,now,0.3);
+    fxDisplay2.perc={roomSize:+roomSize.toFixed(2),phaserRate:+phaserRate.toFixed(1)};
+  }
+
+  // Hats → BTC delta: delay feedback + rattle wet
+  if(stemData2.hats?.active){
+    const v=liveData.market.norm; // 0.5=neutral, 0=falling, 1=rising
+    const mag=Math.abs(v-0.5)*2; // 0=flat market, 1=big move
+    const delayWet=Math.round(mag*85);
+    const reverbWet=Math.round(mag*40);
+    stemData2.hats.fx.delay.feedback.setTargetAtTime(0.2+mag*0.45,now,0.2);
+    stemData2.hats.fx.delay.wet.setTargetAtTime(mag*0.85,now,0.2);
+    stemData2.hats.fx.reverb.wet.setTargetAtTime(mag*0.4,now,0.3);
+    fxDisplay2.hats={delayWet,reverbWet};
+  }
+
+  // Piano → Temperature: reverb + chorus
+  if(stemData2.piano?.active){
+    const v=liveData.temp.norm; // 0=cold, 1=hot
+    const reverbWet=Math.round(5+v*75); // cold=5%, hot=80%
+    const chorusDepth=Math.round(3+v*62);
+    stemData2.piano.fx.reverb.roomSize=0.3+v*0.55;
+    stemData2.piano.fx.reverb.dampening=5000-v*3500; // cold=clear, hot=damped
+    stemData2.piano.fx.reverb.wet.setTargetAtTime(0.05+v*0.75,now,0.5);
+    stemData2.piano.fx.chorus.depth=0.04+v*0.6;
+    stemData2.piano.fx.chorus.wet.setTargetAtTime(v*0.55,now,0.4);
+    fxDisplay2.piano={reverbWet,chorusDepth};
+  }
+
+  // Synth → Wind: autoFilter sweep depth + rate
+  if(stemData2.synth?.active){
+    const v=liveData.wind.norm; // 0=still, 1=storm
+    const filterWet=Math.round(v*90);
+    const chorusDepth=Math.round(10+v*55);
+    // Higher wind = faster, deeper filter sweep
+    stemData2.synth.fx.autoFilter.frequency.setTargetAtTime(0.5+v*8,now,0.5); // 0.5-8.5 Hz
+    stemData2.synth.fx.autoFilter.octaves=1+v*3.5;
+    stemData2.synth.fx.autoFilter.wet.setTargetAtTime(v*0.9,now,0.4);
+    stemData2.synth.fx.chorus.depth=0.08+v*0.55;
+    fxDisplay2.synth={filterWet,chorusDepth};
+  }
+}
+
 setInterval(runModulation,100);
 
-// ── Stem canvases ──
+// ── Stem canvases ────────────────────────────────────────────────
 const stemCanvases={};
 function initStemCanvases(){
+  // Clear old canvases
+  Object.keys(stemCanvases).forEach(k=>delete stemCanvases[k]);
   STEMS.forEach((k,ki)=>{
     const el=document.getElementById('canvas-'+k);if(!el)return;
     el.width=(el.offsetWidth||160)*devicePixelRatio;
@@ -1020,13 +1119,13 @@ function drawStemCanvases(){
     const sc=stemCanvases[k];if(!sc)return;
     const{el,ctx,ki}=sc,w=el.width,h=el.height;
     ctx.clearRect(0,0,w,h);
-    const isActive=stemData[k]?.active;
+    const isActive=activeStemData[k]?.active;
     const inkR=hexToRgb(todStrokeColor);
     const bgHex=(getComputedStyle(document.documentElement).getPropertyValue('--tod-bg')||'#F5F0E8').trim();
     const bgR=hexToRgb(bgHex);
     const lineColor=isActive?`rgba(${bgR[0]},${bgR[1]},${bgR[2]},0.85)`:`rgba(${inkR[0]},${inkR[1]},${inkR[2]},0.3)`;
     const fillColor=isActive?`rgba(${bgR[0]},${bgR[1]},${bgR[2]},0.08)`:`rgba(${inkR[0]},${inkR[1]},${inkR[2]},0.04)`;
-    const analyser=stemData[k]?.analyser;
+    const analyser=activeStemData[k]?.analyser;
     if(!analyser||!isPlaying){
       ctx.beginPath();ctx.moveTo(0,h/2);
       for(let x=0;x<=w;x+=2){const y=h/2+Math.sin((x/w)*Math.PI*3+stemCanvasT*0.016+ki*0.8)*(h*0.18)+Math.sin((x/w)*Math.PI*6+stemCanvasT*0.010+ki*1.2)*(h*0.06);ctx.lineTo(x,y);}
@@ -1045,50 +1144,57 @@ function drawStemCanvases(){
   });
 }
 
-// ── FX Panel ──
+// ── FX Panel ─────────────────────────────────────────────────────
 let fxPanelKey=null;
-const fxPanel=document.getElementById('fx-panel');
+const fxPanelEl=document.getElementById('fx-panel');
 const fxPanelTitle=document.getElementById('fx-panel-title');
 const fxPanelBody=document.getElementById('fx-panel-body');
 function openFxPanel(key){
   fxPanelKey=key;const cfg=fxPanelConfig[key];if(!cfg)return;
   fxPanelTitle.textContent=cfg.title;
-  fxPanelBody.innerHTML=cfg.rows.map(r=>`
-    <div class="fx-row">
-      <div class="fx-row-top"><span class="fx-row-name">${r.label}</span><span class="fx-row-val" id="fxv-${key}-${r.id}">—</span></div>
-      <div class="fx-track"><div class="fx-fill" id="fxb-${key}-${r.id}" style="width:2%"></div></div>
-      <div class="fx-source">← ${r.src}</div>
-      <div class="fx-data-val" id="fxd-${key}">Live: ${liveData[key].display}</div>
-    </div>
-  `).join('');
-  fxPanel.classList.add('visible');refreshFxPanel();
+  if(cfg.note&&cfg.rows&&cfg.rows.length===0){
+    fxPanelBody.innerHTML=`<div class="fx-panel-note">${cfg.note}</div>`;
+  }else{
+    fxPanelBody.innerHTML=(cfg.rows||[]).map(r=>`
+      <div class="fx-row">
+        <div class="fx-row-top"><span class="fx-row-name">${r.label}</span><span class="fx-row-val" id="fxv-${key}-${r.id}">—</span></div>
+        <div class="fx-track"><div class="fx-fill" id="fxb-${key}-${r.id}" style="width:2%"></div></div>
+        <div class="fx-source">← ${r.src}</div>
+        <div class="fx-data-val" id="fxd-${key}">Live: ${liveData[activeStemData[key]?.dataKey||key]?.display||'—'}</div>
+      </div>
+    `).join('');
+  }
+  fxPanelEl.classList.add('visible');refreshFxPanel();
 }
-function closeFxPanel(){fxPanel.classList.remove('visible');fxPanelKey=null;}
+function closeFxPanel(){fxPanelEl.classList.remove('visible');fxPanelKey=null;}
 document.getElementById('fx-panel-close').addEventListener('click',closeFxPanel);
 function refreshFxPanel(){
-  if(!fxPanelKey)return;const cfg=fxPanelConfig[fxPanelKey];if(!cfg)return;
-  const vals=fxDisplay[fxPanelKey];
+  if(!fxPanelKey)return;const cfg=fxPanelConfig[fxPanelKey];if(!cfg||!cfg.rows)return;
+  const vals=fxDisplay[fxPanelKey]||{};
   cfg.rows.forEach(r=>{
     const vEl=document.getElementById(`fxv-${fxPanelKey}-${r.id}`);
     const bEl=document.getElementById(`fxb-${fxPanelKey}-${r.id}`);
-    const dEl=document.getElementById(`fxd-${fxPanelKey}`);
     if(!vEl||!bEl)return;
-    const raw=vals[r.id];
+    const raw=vals[r.id];if(raw===undefined)return;
     vEl.textContent=raw+' '+r.unit;
-    bEl.style.width=Math.max(2,Math.min(98,r.normFn(raw)*100))+'%';
-    if(dEl)dEl.textContent='Live: '+liveData[fxPanelKey].display;
+    const nfn=r.normFn||NORM_FNS[`${fxPanelKey}.${r.id}`]||(v=>v);
+    bEl.style.width=Math.max(2,Math.min(98,nfn(raw)*100))+'%';
   });
 }
 
-// ── Tile interactions ──
+// ── Tile + mute interactions ─────────────────────────────────────
 function attachTileInteractions(){
   STEMS.forEach(key=>{
     const tile=document.getElementById('tile-'+key),badge=document.getElementById('badge-'+key);
     if(!tile)return;
+    // Kick is anchor, not interactive
+    const cfg=currentTrack===2?TRACK2_STEMS_CFG.find(x=>x.key===key):null;
+    if(cfg?.noFx)return;
     tile.addEventListener('click',e=>{
       if(e.target.classList.contains('stem-mute'))return;
-      if(!isReady){return;}
-      const s=stemData[key];
+      if(currentTrack===1&&!isReady1)return;
+      if(currentTrack===2&&!isReady2)return;
+      const s=activeStemData[key];if(!s)return;
       if(s.active){
         s.active=false;s.dryGain.gain.rampTo(1,0.35);s.wetGain.gain.rampTo(0,0.35);
         tile.classList.remove('active');badge.textContent='dry';
@@ -1104,27 +1210,75 @@ function attachTileInteractions(){
 function attachMuteInteractions(){
   STEMS.forEach(key=>{
     const btn=document.getElementById('mute-'+key);if(!btn)return;
+    const cfg=currentTrack===2?TRACK2_STEMS_CFG.find(x=>x.key===key):null;
+    if(cfg?.noFx)return;
     btn.addEventListener('click',e=>{
-      e.stopPropagation();const s=stemData[key];if(!s)return;
+      e.stopPropagation();const s=activeStemData[key];if(!s)return;
       s.muted=!s.muted;btn.textContent=s.muted?'unmute':'mute';btn.classList.toggle('is-muted',s.muted);
       if(s.masterGain)s.masterGain.gain.rampTo(s.muted?0:1,0.12);
     });
   });
 }
 document.addEventListener('click',e=>{
-  if(fxPanel.classList.contains('visible')&&!fxPanel.contains(e.target)&&!e.target.closest('.stem-tile'))closeFxPanel();
+  if(fxPanelEl.classList.contains('visible')&&!fxPanelEl.contains(e.target)&&!e.target.closest('.stem-tile'))closeFxPanel();
 });
 
-// ── TOD palette ──
+// ── Entry overlay + autoplay ─────────────────────────────────────
+let gestureListened=false,audioStarted=false;
+function dismissEntry(){
+  if(gestureListened)return;
+  gestureListened=true;
+  document.getElementById('entry-overlay').classList.add('dismissed');
+  setTimeout(async()=>{
+    if(audioStarted)return;audioStarted=true;
+    if(!TRACK){const wait=setInterval(async()=>{if(TRACK){clearInterval(wait);await _startPlayback();}},100);}
+    else await _startPlayback();
+  },600);
+}
+async function _startPlayback(){
+  const ok=currentTrack===1?await initAudio1():await initAudio2();
+  if(!ok)return;
+  startTrack(currentTrack);
+  isPlaying=true;
+  document.getElementById('play-icon').innerHTML='<rect x="0" y="0" width="3" height="12"/><rect x="6" y="0" width="3" height="12"/>';
+  document.getElementById('play-label').textContent='Pause';
+  document.getElementById('master-play-btn').classList.add('playing');
+  setStatus(`· playing · ${currentTrack===1?'blizzard 02.23.26':'track 2'} ·`);
+}
+['click','touchstart','keydown','scroll'].forEach(evt=>{
+  document.addEventListener(evt,dismissEntry,{once:true,passive:true});
+});
+
+// ── Play button ──────────────────────────────────────────────────
+document.getElementById('master-play-btn').addEventListener('click',async()=>{
+  if(typeof Tone==='undefined'){setStatus('· Tone.js not loaded ·');return;}
+  const icon=document.getElementById('play-icon'),label=document.getElementById('play-label'),btn=document.getElementById('master-play-btn');
+  if((currentTrack===1&&!isReady1)||(currentTrack===2&&!isReady2)){
+    gestureListened=true;
+    document.getElementById('entry-overlay').classList.add('dismissed');
+    if(!audioStarted){audioStarted=true;await _startPlayback();}
+    return;
+  }
+  if(isPlaying){
+    stopCurrentTrack();
+    icon.innerHTML='<polygon points="0,0 10,6 0,12"/>';label.textContent='Play';
+    btn.classList.remove('playing');setStatus('· paused ·');isPlaying=false;
+  }else{
+    startTrack(currentTrack);
+    icon.innerHTML='<rect x="0" y="0" width="3" height="12"/><rect x="6" y="0" width="3" height="12"/>';
+    label.textContent='Pause';btn.classList.add('playing');
+    setStatus(`· playing · ${currentTrack===1?'blizzard 02.23.26':'track 2'} ·`);
+    isPlaying=true;
+  }
+});
+
+// ── TOD palette ──────────────────────────────────────────────────
 const TOD_KEYFRAMES=[
   {h:0,bg:'#0e1420',ink:'#4a8f7a'},{h:5,bg:'#0e1420',ink:'#4a8f7a'},
   {h:7,bg:'#d4b896',ink:'#3d2010'},{h:17,bg:'#F5F0E8',ink:'#2D5A3D'},
   {h:20,bg:'#1a1008',ink:'#c87941'},{h:24,bg:'#0e1420',ink:'#4a8f7a'},
 ];
-function lerpColor(a,b,t){
-  const ra=hexToRgb(a),rb=hexToRgb(b);
-  return'#'+[0,1,2].map(i=>Math.round(ra[i]+(rb[i]-ra[i])*t).toString(16).padStart(2,'0')).join('');
-}
+function lerpColor(a,b,t){const ra=hexToRgb(a),rb=hexToRgb(b);return'#'+[0,1,2].map(i=>Math.round(ra[i]+(rb[i]-ra[i])*t).toString(16).padStart(2,'0')).join('');}
 function rgbToRgba(hex,alpha){const[r,g,b]=hexToRgb(hex);return`rgba(${r},${g},${b},${alpha})`;}
 function getTodPalette(){
   const now=new Date(),h=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;
@@ -1144,14 +1298,51 @@ function applyTodPalette(){
   root.style.setProperty('--green-faint',rgbToRgba(p.ink,0.07));
   root.style.setProperty('--tod-line',rgbToRgba(p.ink,0.18));
   root.style.setProperty('--tod-faint',rgbToRgba(p.ink,0.07));
-  if(_todFirstApply){
-    requestAnimationFrame(()=>{document.body.style.transition='background 120s linear, color 120s linear';});
-    _todFirstApply=false;
-  }
+  if(_todFirstApply){requestAnimationFrame(()=>{document.body.style.transition='background 120s linear, color 120s linear';});_todFirstApply=false;}
 }
 applyTodPalette();setInterval(applyTodPalette,30000);
 
-// ── Boot ──
+// ── Boot ─────────────────────────────────────────────────────────
+async function loadTrack(){
+  try{
+    const res=await fetch('track.json');
+    if(!res.ok)throw new Error(`track.json ${res.status}`);
+    TRACK=await res.json();
+    STEMS=[...TRACK1_STEMS_KEYS];
+    activeStemData=stemData1;
+
+    // Build fxPanelConfig1 from track.json
+    TRACK.stems.forEach(s=>{
+      fxPanelConfig1[s.key]={
+        title:s.fxPanel.title,
+        rows:s.fxPanel.rows.map(r=>({...r,normFn:NORM_FNS[`${s.key}.${r.id}`]||(v=>v)})),
+      };
+    });
+    fxDisplay1={
+      subway:{bits:8,filter:2000,feedback:20},
+      snow:{wah:200,autoFilter:0,vibrato:4,pump:100},
+      temp:{ping:0,chorus:15,reverb:5},
+      wind:{filter:800,dist:0},
+      market:{shift:'0.0',tremolo:1},
+      time:{hipass:1200,bits:8},
+    };
+    fxPanelConfig=fxPanelConfig1;
+    fxDisplay=fxDisplay1;
+
+    // Render initial UI (track 1)
+    renderPoem(1);
+    renderStemsGrid(1);
+    renderMechGrid(1);
+    updateTrackDots(1);
+    initStemCanvases();
+    drawStemCanvases();
+    attachTileInteractions();
+    attachMuteInteractions();
+    updateTimeStem();
+  }catch(e){
+    console.error('track.json:',e);
+  }
+}
 loadTrack();
 </script>
 </body>
