@@ -427,11 +427,11 @@ async function fetchWeather(){
     setPoem('poem-wind',Math.round(w)+' mph');
     setPoem('poem-cloud',Math.round(cc)+'%');
     document.getElementById('live-readout').textContent=`· ${Math.round(t)}°F · ${Math.round(w)} mph · ${Math.round(cc)}% cloud ·`;
-    const lt=document.getElementById('mech-live-temp');if(lt)lt.textContent=Math.round(t)+'°F';
+    const lt=document.getElementById('mech-live-t2piano');if(lt)lt.textContent=Math.round(t)+'°F';
     const ls=document.getElementById('mech-live-snow');if(ls)ls.textContent=p.toFixed(1)+' mm';
     const lw=document.getElementById('mech-live-wind');if(lw)lw.textContent=Math.round(w)+' mph';
-    const lt2=document.getElementById('mech-live-temp');if(lt2)lt2.textContent=Math.round(t)+'°F';
-    const lcc=document.getElementById('mech-live-cc');if(lcc)lcc.textContent=Math.round(cc)+'%';
+    const lt2=document.getElementById('mech-live-t2piano');if(lt2)lt2.textContent=Math.round(t)+'°F';
+    const lcc=document.getElementById('mech-live-t2cc');if(lcc)lcc.textContent=Math.round(cc)+'%';
   }catch(e){console.warn('Weather:',e.message);}
 }
 fetchWeather();setInterval(fetchWeather,60000);
@@ -443,8 +443,8 @@ async function fetchMTA(){
     const d=await r.json();
     liveData.subway={norm:d.norm,display:d.display,label:'L Train',raw:d.combined};
     setPoem('poem-subway',d.display);
-    const lm=document.getElementById('mech-live-subway');if(lm)lm.textContent=d.display;
-    const lm2=document.getElementById('mech-live-subway');if(lm2)lm2.textContent=d.display;
+    const lm=document.getElementById('mech-live-t2perc');if(lm)lm.textContent=d.display;
+    const lm2=document.getElementById('mech-live-t2perc');if(lm2)lm2.textContent=d.display;
   }catch(e){console.warn('MTA:',e.message);}
 }
 fetchMTA();setInterval(fetchMTA,60000);
@@ -498,8 +498,8 @@ function connectCoinbase(){
         liveData.market={norm:computeBtcDeltaNorm(),display:`$${Math.round(price).toLocaleString()}`,delta:delta60,raw:price,label:'BTC-USD'};
         setPoem('poem-market',`$${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)}`);
         document.getElementById('btc-readout').textContent=`· BTC $${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)} ·`;
-        const lmk=document.getElementById('mech-live-market');if(lmk)lmk.textContent=`$${Math.round(price).toLocaleString()}`;
-        const lh=document.getElementById('mech-live-market');if(lh)lh.textContent=`$${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)}`;
+        const lmk=document.getElementById('mech-live-t2hats');if(lmk)lmk.textContent=`$${Math.round(price).toLocaleString()}`;
+        const lh=document.getElementById('mech-live-t2hats');if(lh)lh.textContent=`$${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)}`;
       }
     }catch(err){}
   };
@@ -526,11 +526,11 @@ const TRACK2_POEM=[
   {label:'AQI · NYC',   id:'poem-aqi',    sub:'global · master filter'},
 ];
 const TRACK2_STEMS_CFG=[
-  {key:'kick',   file:'2_stems_for_player/kick_dry.mp3',   label:'Kick',       source:'Anchor',              target:'→ no effects · fixed',        noFx:true},
-  {key:'subway', file:'2_stems_for_player/subway_dry.mp3', label:'Percussion', source:'MTA · L Train',       target:'→ reverb · phaser'},
-  {key:'market', file:'2_stems_for_player/market_dry.mp3', label:'Hi-Hats',    source:'Markets · BTC-USD',   target:'→ delay · rattle · reverb'},
-  {key:'temp',   file:'2_stems_for_player/temp_dry.mp3',   label:'Piano',      source:'Weather · Temp',      target:'→ reverb · chorus'},
-  {key:'cc',     file:'2_stems_for_player/cc_dry.mp3',     label:'Synth Pad',  source:'Weather · Cloud Cover',target:'→ lfo filter · chorus'},
+  {key:'t2kick', file:'2_stems_for_player/kick_dry.mp3',   label:'Kick',       source:'Anchor',              target:'→ no effects · fixed',        noFx:true},
+  {key:'t2perc', file:'2_stems_for_player/subway_dry.mp3', label:'Percussion', source:'MTA · L Train',       target:'→ reverb · phaser'},
+  {key:'t2hats', file:'2_stems_for_player/market_dry.mp3', label:'Hi-Hats',    source:'Markets · BTC-USD',   target:'→ delay · rattle · reverb'},
+  {key:'t2piano',file:'2_stems_for_player/temp_dry.mp3',   label:'Piano',      source:'Weather · Temp',      target:'→ reverb · chorus'},
+  {key:'t2cc',   file:'2_stems_for_player/cc_dry.mp3',     label:'Synth Pad',  source:'Weather · Cloud Cover',target:'→ lfo filter · chorus'},
 ];
 const MECH_LOGIC_1={
   subway:'L Train delay in minutes maps to drum bit depth. 0 min = 8 bits (clean). 18 min = 3 bits (destroyed).',
@@ -590,7 +590,7 @@ let fxPanelConfig={},fxDisplay={};
 let fxPanelConfig1={},fxDisplay1={};
 let fxPanelConfig2={},fxDisplay2={};
 const TRACK1_STEMS_KEYS=['subway','snow','temp','wind','market','time'];
-const TRACK2_STEMS_KEYS=['kick','subway','market','temp','cc'];
+const TRACK2_STEMS_KEYS=['t2kick','t2perc','t2hats','t2piano','t2cc'];
 
 // ── Shared audio chain (created once) ───────────────────────────
 let masterLimiter=null,masterCompressor=null,aqiFilterNode=null;
@@ -718,61 +718,61 @@ async function initAudio2(){
     makeRoute2('kick',[]);
 
     // Perc (subway_dry) → L Train: Freeverb + Phaser
-    stemData2.subway.fx.reverb=new Tone.Freeverb({roomSize:0.3,dampening:4000,wet:0.0});
-    stemData2.subway.fx.phaser=new Tone.Phaser({frequency:0.5,octaves:2,baseFrequency:500,wet:0.0});
-    makeRoute2('subway',[stemData2.subway.fx.reverb,stemData2.subway.fx.phaser]);
+    stemData2.t2perc.fx.reverb=new Tone.Freeverb({roomSize:0.3,dampening:4000,wet:0.0});
+    stemData2.t2perc.fx.phaser=new Tone.Phaser({frequency:0.5,octaves:2,baseFrequency:500,wet:0.0});
+    makeRoute2('t2perc',[stemData2.t2perc.fx.reverb,stemData2.t2perc.fx.phaser]);
 
     // Hats (market_dry) → BTC: Triplet delay rattle + Freeverb
-    stemData2.market.fx.delay=new Tone.FeedbackDelay({delayTime:'8t',feedback:0.35,wet:0.0});
-    stemData2.market.fx.reverb=new Tone.Freeverb({roomSize:0.2,dampening:5000,wet:0.0});
-    stemData2.market.fx.hpFilter=new Tone.Filter({frequency:6000,type:'highpass'});
-    makeRoute2('market',[stemData2.market.fx.hpFilter,stemData2.market.fx.delay,stemData2.market.fx.reverb]);
+    stemData2.t2hats.fx.delay=new Tone.FeedbackDelay({delayTime:'8t',feedback:0.35,wet:0.0});
+    stemData2.t2hats.fx.reverb=new Tone.Freeverb({roomSize:0.2,dampening:5000,wet:0.0});
+    stemData2.t2hats.fx.hpFilter=new Tone.Filter({frequency:6000,type:'highpass'});
+    makeRoute2('t2hats',[stemData2.t2hats.fx.hpFilter,stemData2.t2hats.fx.delay,stemData2.t2hats.fx.reverb]);
 
     // Piano (temp_dry) → Temperature: Freeverb + Chorus
-    stemData2.temp.fx.reverb=new Tone.Freeverb({roomSize:0.5,dampening:2000,wet:0.0});
-    stemData2.temp.fx.chorus=new Tone.Chorus({frequency:1.5,delayTime:3.5,depth:0.08,wet:0.0}).start();
-    makeRoute2('temp',[stemData2.temp.fx.reverb,stemData2.temp.fx.chorus]);
+    stemData2.t2piano.fx.reverb=new Tone.Freeverb({roomSize:0.5,dampening:2000,wet:0.0});
+    stemData2.t2piano.fx.chorus=new Tone.Chorus({frequency:1.5,delayTime:3.5,depth:0.08,wet:0.0}).start();
+    makeRoute2('t2piano',[stemData2.t2piano.fx.reverb,stemData2.t2piano.fx.chorus]);
 
     // Synth (cc_dry) → Cloud Cover: Sawtooth AutoFilter + Chorus + Freeverb
-    stemData2.cc.fx.autoFilter=new Tone.AutoFilter({
+    stemData2.t2cc.fx.autoFilter=new Tone.AutoFilter({
       frequency:3,
       type:'sawtooth',
       baseFrequency:300,
       octaves:3.0,
       wet:0.0
     }).start();
-    stemData2.cc.fx.chorus=new Tone.Chorus({frequency:1,delayTime:4,depth:0.12,wet:0.25}).start();
-    stemData2.cc.fx.reverb=new Tone.Freeverb({roomSize:0.65,dampening:1500,wet:0.2});
-    makeRoute2('cc',[stemData2.cc.fx.autoFilter,stemData2.cc.fx.chorus,stemData2.cc.fx.reverb]);
+    stemData2.t2cc.fx.chorus=new Tone.Chorus({frequency:1,delayTime:4,depth:0.12,wet:0.25}).start();
+    stemData2.t2cc.fx.reverb=new Tone.Freeverb({roomSize:0.65,dampening:1500,wet:0.2});
+    makeRoute2('t2cc',[stemData2.t2cc.fx.autoFilter,stemData2.t2cc.fx.chorus,stemData2.t2cc.fx.reverb]);
 
     await Promise.race([Tone.loaded(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),25000))]);
 
     // Build track 2 fxPanel config
     fxPanelConfig2={
-      kick:{ title:'Kick · Anchor', rows:[], note:'The kick is the fixed point. No data effects. Everything moves around it.' },
-      subway:{ title:'L Train → Percussion', rows:[
+      t2kick:{ title:'Kick · Anchor', rows:[], note:'The kick is the fixed point. No data effects. Everything moves around it.' },
+      t2perc:{ title:'L Train → Percussion', rows:[
         {id:'roomSize',label:'Room Size',unit:'',src:'L Train delay',normFn:v=>v},
         {id:'phaserRate',label:'Phaser Rate',unit:'Hz',src:'L Train delay',normFn:v=>v/3},
       ]},
-      market:{ title:'BTC-USD → Hi-Hats', rows:[
+      t2hats:{ title:'BTC-USD → Hi-Hats', rows:[
         {id:'delayWet',label:'Delay Wet',unit:'%',src:'BTC 60s delta',normFn:v=>v/100},
         {id:'reverbWet',label:'Reverb Wet',unit:'%',src:'BTC 60s delta',normFn:v=>v/100},
       ]},
-      temp:{ title:'Temperature → Piano', rows:[
+      t2piano:{ title:'Temperature → Piano', rows:[
         {id:'reverbWet',label:'Reverb Wet',unit:'%',src:'Temperature',normFn:v=>v/100},
         {id:'chorusDepth',label:'Chorus Depth',unit:'%',src:'Temperature',normFn:v=>v/100},
       ]},
-      cc:{ title:'Cloud Cover → Synth', rows:[
+      t2cc:{ title:'Cloud Cover → Synth', rows:[
         {id:'filterWet',label:'Filter Wet',unit:'%',src:'Cloud cover',normFn:v=>v/100},
         {id:'chorusDepth',label:'Chorus Depth',unit:'%',src:'Cloud cover',normFn:v=>v/100},
       ]},
     };
     fxDisplay2={
-      kick:{},
-      subway:{roomSize:0.1,phaserRate:0.5},
-      market:{delayWet:0,reverbWet:5},
-      temp:{reverbWet:5,chorusDepth:5},
-      cc:{filterWet:0,chorusDepth:25},
+      t2kick:{},
+      t2perc:{roomSize:0.1,phaserRate:0.5},
+      t2hats:{delayWet:0,reverbWet:5},
+      t2piano:{reverbWet:5,chorusDepth:5},
+      t2cc:{filterWet:0,chorusDepth:25},
     };
 
     isReady2=true;initInProgress=false;
@@ -1100,54 +1100,54 @@ function runModulation2(){
   const now=Tone.now();
 
   // Perc (subway key) → L Train delay: reverb room size + phaser rate
-  if(stemData2.subway?.active){
+  if(stemData2.t2perc?.active){
     const v=liveData.subway.norm;
     const roomSize=0.1+v*0.85;
     const phaserRate=0.2+v*2.8;
-    stemData2.subway.fx.reverb.roomSize=roomSize;
-    stemData2.subway.fx.reverb.wet.setTargetAtTime(v*0.8,now,0.3);
-    stemData2.subway.fx.phaser.frequency.setTargetAtTime(phaserRate,now,0.3);
-    stemData2.subway.fx.phaser.wet.setTargetAtTime(v*0.6,now,0.3);
-    fxDisplay2.subway={roomSize:+roomSize.toFixed(2),phaserRate:+phaserRate.toFixed(1)};
+    stemData2.t2perc.fx.reverb.roomSize=roomSize;
+    stemData2.t2perc.fx.reverb.wet.setTargetAtTime(v*0.8,now,0.3);
+    stemData2.t2perc.fx.phaser.frequency.setTargetAtTime(phaserRate,now,0.3);
+    stemData2.t2perc.fx.phaser.wet.setTargetAtTime(v*0.6,now,0.3);
+    fxDisplay2.t2perc={roomSize:+roomSize.toFixed(2),phaserRate:+phaserRate.toFixed(1)};
   }
 
   // Hats (market key) → BTC delta: delay rattle
-  if(stemData2.market?.active){
+  if(stemData2.t2hats?.active){
     const v=liveData.market.norm;
     const mag=Math.abs(v-0.5)*2;
     const delayWet=Math.round(mag*85);
     const reverbWet=Math.round(mag*40);
-    stemData2.market.fx.delay.feedback.setTargetAtTime(0.2+mag*0.45,now,0.2);
-    stemData2.market.fx.delay.wet.setTargetAtTime(mag*0.85,now,0.2);
-    stemData2.market.fx.reverb.wet.setTargetAtTime(mag*0.4,now,0.3);
-    fxDisplay2.market={delayWet,reverbWet};
+    stemData2.t2hats.fx.delay.feedback.setTargetAtTime(0.2+mag*0.45,now,0.2);
+    stemData2.t2hats.fx.delay.wet.setTargetAtTime(mag*0.85,now,0.2);
+    stemData2.t2hats.fx.reverb.wet.setTargetAtTime(mag*0.4,now,0.3);
+    fxDisplay2.t2hats={delayWet,reverbWet};
   }
 
   // Piano (temp key) → Temperature: reverb + chorus
-  if(stemData2.temp?.active){
+  if(stemData2.t2piano?.active){
     const v=liveData.temp.norm;
     const reverbWet=Math.round(5+v*75);
     const chorusDepth=Math.round(3+v*62);
-    stemData2.temp.fx.reverb.roomSize=0.3+v*0.55;
-    stemData2.temp.fx.reverb.dampening=5000-v*3500;
-    stemData2.temp.fx.reverb.wet.setTargetAtTime(0.05+v*0.75,now,0.5);
-    stemData2.temp.fx.chorus.depth=0.04+v*0.6;
-    stemData2.temp.fx.chorus.wet.setTargetAtTime(v*0.55,now,0.4);
-    fxDisplay2.temp={reverbWet,chorusDepth};
+    stemData2.t2piano.fx.reverb.roomSize=0.3+v*0.55;
+    stemData2.t2piano.fx.reverb.dampening=5000-v*3500;
+    stemData2.t2piano.fx.reverb.wet.setTargetAtTime(0.05+v*0.75,now,0.5);
+    stemData2.t2piano.fx.chorus.depth=0.04+v*0.6;
+    stemData2.t2piano.fx.chorus.wet.setTargetAtTime(v*0.55,now,0.4);
+    fxDisplay2.t2piano={reverbWet,chorusDepth};
   }
 
   // Synth (cc key) → Cloud Cover: autoFilter sweep
   // Heavy clouds (high norm) = slow, deep, muffled filter
   // Clear sky (low norm) = fast, bright, open filter
-  if(stemData2.cc?.active){
+  if(stemData2.t2cc?.active){
     const v=liveData.cloud.norm; // 0=clear, 1=overcast
     const filterWet=Math.round(v*90);
     const chorusDepth=Math.round(10+(1-v)*55); // clear sky = more chorus
-    stemData2.cc.fx.autoFilter.frequency.setTargetAtTime(0.3+v*0.5+(1-v)*6,now,1.0); // overcast=slow, clear=fast
-    stemData2.cc.fx.autoFilter.octaves=1+(1-v)*3;
-    stemData2.cc.fx.autoFilter.wet.setTargetAtTime(0.2+v*0.7,now,0.8);
-    stemData2.cc.fx.chorus.depth=0.08+(1-v)*0.5;
-    fxDisplay2.cc={filterWet,chorusDepth};
+    stemData2.t2cc.fx.autoFilter.frequency.setTargetAtTime(0.3+v*0.5+(1-v)*6,now,1.0); // overcast=slow, clear=fast
+    stemData2.t2cc.fx.autoFilter.octaves=1+(1-v)*3;
+    stemData2.t2cc.fx.autoFilter.wet.setTargetAtTime(0.2+v*0.7,now,0.8);
+    stemData2.t2cc.fx.chorus.depth=0.08+(1-v)*0.5;
+    fxDisplay2.t2cc={filterWet,chorusDepth};
   }
 }
 
