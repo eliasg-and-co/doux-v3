@@ -45,30 +45,13 @@
   .nav-right{font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;opacity:0.28;pointer-events:all;}
 
   /* ── Track navigator ── */
-  .track-nav{
-    display:flex;align-items:center;gap:1.2rem;
-    margin-bottom:3rem;
-  }
-  .track-arrow{
-    display:flex;align-items:center;justify-content:center;
-    width:2.4rem;height:2.4rem;
-    border:1px solid var(--tod-line);
-    background:transparent;color:var(--tod-ink);
-    cursor:crosshair;font-size:1rem;
-    transition:border-color 0.18s,background 0.18s,opacity 0.18s;
-    user-select:none;flex-shrink:0;
-  }
+  .track-nav{display:flex;align-items:center;gap:1.2rem;margin-bottom:3rem;}
+  .track-arrow{display:flex;align-items:center;justify-content:center;width:2.4rem;height:2.4rem;border:1px solid var(--tod-line);background:transparent;color:var(--tod-ink);cursor:crosshair;font-size:1rem;transition:border-color 0.18s,background 0.18s,opacity 0.18s;user-select:none;flex-shrink:0;}
   .track-arrow:hover{border-color:var(--tod-ink);background:var(--tod-faint);}
   .track-arrow:active{background:var(--tod-ink);color:var(--tod-bg);}
   .track-arrow.disabled{opacity:0.15;pointer-events:none;}
-  .track-label{
-    font-family:var(--serif);font-size:1.1rem;font-weight:700;
-    letter-spacing:-0.01em;min-width:180px;
-  }
-  .track-sub{
-    font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;
-    opacity:0.32;margin-top:0.2rem;
-  }
+  .track-label{font-family:var(--serif);font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;min-width:180px;}
+  .track-sub{font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.32;margin-top:0.2rem;}
   .track-dot{width:5px;height:5px;border-radius:50%;background:var(--tod-ink);opacity:0.15;transition:opacity 0.3s,transform 0.3s;cursor:crosshair;}
   .track-dot.active{opacity:0.55;transform:scale(1.3);}
 
@@ -85,10 +68,24 @@
   .poem-label{font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.65;line-height:1;}
   .poem-value{font-family:var(--serif);font-size:clamp(2.2rem,6vw,5.5rem);font-weight:700;letter-spacing:-0.03em;line-height:0.95;}
   .poem-value.loading{opacity:0.15;}
+  @keyframes poemValPulse{0%{opacity:1}40%{opacity:0.32}100%{opacity:1}}
+  .poem-value.updating{animation:poemValPulse 0.22s ease forwards;}
   .poem-sub{font-size:0.72rem;letter-spacing:0.10em;opacity:0.60;text-align:right;font-style:italic;white-space:nowrap;}
   .hero-statement{max-width:520px;}
   .hero-statement p{font-size:0.82rem;line-height:1.85;opacity:0.5;}
   .hero-statement .meta-note{font-size:0.62rem;letter-spacing:0.06em;opacity:0.25;margin-top:0.7rem;font-style:italic;}
+
+  /* ── HERO EXPLAINER (NEW) ── */
+  @keyframes heroExplainerIn{from{opacity:0;transform:translateY(5px)}to{opacity:0.48;transform:translateY(0)}}
+  .hero-explainer{
+    font-size:0.72rem;
+    letter-spacing:0.08em;
+    font-style:italic;
+    line-height:1.7;
+    margin-bottom:1.8rem;
+    opacity:0;
+    animation:heroExplainerIn 0.8s ease 0s forwards;
+  }
 
   /* ══ PLAYER ══ */
   #player{position:relative;z-index:1;padding:5rem 2.5rem 4rem;border-top:1px solid var(--tod-line);}
@@ -97,21 +94,63 @@
   .player-title em{font-style:italic;font-weight:400;opacity:0.5;}
   .player-right{display:flex;align-items:center;gap:1.5rem;}
   .player-hint{font-size:0.78rem;letter-spacing:0.06em;opacity:0.60;margin-bottom:2.5rem;font-style:italic;padding-bottom:1.2rem;border-bottom:1px solid var(--tod-line);}
-  .play-btn{display:flex;align-items:center;gap:0.6rem;background:transparent;border:1px solid var(--tod-line);color:var(--tod-ink);padding:0.65rem 1.2rem;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;cursor:crosshair;transition:border-color 0.2s,opacity 0.2s;}
-  .play-btn:hover{border-color:var(--tod-ink);}
+
+  /* ── PLAY BUTTON (REDESIGNED) ── */
+  .play-btn{
+    display:flex;align-items:center;gap:0.6rem;
+    background:transparent;
+    border:1px solid var(--tod-line);
+    color:var(--tod-ink);
+    padding:0.75rem 1.6rem;
+    min-height:52px;min-width:130px;
+    font-family:var(--mono);font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;
+    cursor:crosshair;
+    transition:border-color 0.2s,background 0.2s,transform 0.12s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.25s;
+    position:relative;
+  }
+  .play-btn:hover{border-color:var(--tod-ink);box-shadow:0 2px 14px rgba(0,0,0,0.07);}
+  .play-btn.clicking{transform:scale(0.95)!important;transition:transform 0.06s ease!important;}
   .play-btn svg{width:9px;height:9px;fill:var(--tod-ink);stroke:none;flex-shrink:0;}
   .play-btn.playing{background:var(--tod-ink);color:var(--tod-bg);}
   .play-btn.playing svg{fill:var(--tod-bg);}
+  @keyframes playPulse{0%,100%{box-shadow:0 0 0 1.5px var(--tod-ink),0 0 0 5px rgba(0,0,0,0)}50%{box-shadow:0 0 0 1.5px var(--tod-ink),0 0 14px 4px rgba(0,0,0,0.07)}}
+  .play-btn.playing{animation:playPulse 3.2s ease-in-out infinite;}
+
   #player-status{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;font-style:italic;}
   #spectrum-canvas{width:100%;height:52px;display:block;margin-bottom:2.5rem;}
   .stems-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--tod-line);border:1px solid var(--tod-line);}
   @media(max-width:1100px){.stems-grid{grid-template-columns:repeat(3,1fr);}}
-  @media(max-width:600px){.stems-grid{grid-template-columns:repeat(2,1fr);}}
-  .stem-tile{background:var(--tod-bg);padding:1.6rem 1.4rem 1.3rem;cursor:crosshair;transition:background 0.25s;position:relative;user-select:none;display:flex;flex-direction:column;}
-  .stem-tile:hover{background:var(--tod-faint);}
-  .stem-tile.active{background:var(--tod-ink);}
+  @media(max-width:600px){.stems-grid{grid-template-columns:1fr;}}
+
+  /* ── STEM TILES (MICRO-INTERACTIONS) ── */
+  .stem-tile{
+    background:var(--tod-bg);padding:1.6rem 1.4rem 1.3rem;
+    cursor:crosshair;
+    transition:background 0.22s,transform 0.14s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.18s ease;
+    position:relative;user-select:none;display:flex;flex-direction:column;
+    will-change:transform;
+  }
+  .stem-tile:not(.anchor):not(.global-stem):not(.active):hover{
+    background:var(--tod-faint);
+    transform:translateY(-2px);
+    box-shadow:0 5px 18px rgba(0,0,0,0.08),0 1px 4px rgba(0,0,0,0.04);
+  }
+  .stem-tile.clicking{
+    transform:scale(0.97) translateY(0) !important;
+    transition:transform 0.06s ease,background 0.06s !important;
+  }
+  .stem-tile.active{
+    background:var(--tod-ink);
+    box-shadow:inset 0 2px 10px rgba(0,0,0,0.20),inset 0 1px 3px rgba(0,0,0,0.12);
+    transform:translateY(0);
+  }
+  .stem-tile.active:hover{
+    transform:translateY(0);
+    box-shadow:inset 0 2px 10px rgba(0,0,0,0.20),inset 0 1px 3px rgba(0,0,0,0.12);
+  }
   .stem-tile.anchor{cursor:default;}
-  .stem-tile.anchor:hover{background:var(--tod-bg);}
+  .stem-tile.anchor:hover{background:var(--tod-bg);transform:none;box-shadow:none;}
+
   .stem-badge{position:absolute;top:0.9rem;right:0.9rem;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0;transition:opacity 0.2s;padding:0.15rem 0.4rem;border:1px solid currentColor;}
   .stem-tile:hover .stem-badge{opacity:0.35;}
   .stem-tile.active .stem-badge{opacity:0.6;color:var(--tod-bg);border-color:rgba(245,240,232,0.3);}
@@ -120,8 +159,27 @@
   .stem-tile.active .stem-source{color:var(--tod-bg);opacity:0.4;}
   .stem-param{font-family:var(--serif);font-size:1.15rem;font-weight:700;margin-bottom:0.18rem;transition:color 0.25s;}
   .stem-tile.active .stem-param{color:var(--tod-bg);}
-  .stem-target{font-size:0.64rem;opacity:0.38;font-style:italic;margin-bottom:0.85rem;transition:color 0.25s,opacity 0.25s;line-height:1.4;}
+  .stem-target{font-size:0.64rem;opacity:0.38;font-style:italic;margin-bottom:0.5rem;transition:color 0.25s,opacity 0.25s;line-height:1.4;}
   .stem-tile.active .stem-target{color:var(--tod-bg);opacity:0.5;}
+
+  /* ── LIVE DATA ROW ON TILES (NEW) ── */
+  .stem-live-row{
+    display:flex;align-items:baseline;gap:0.35rem;
+    margin-bottom:0.75rem;
+    min-height:1rem;overflow:hidden;
+    flex-wrap:nowrap;
+  }
+  .stem-live-src{font-size:0.54rem;letter-spacing:0.10em;text-transform:uppercase;opacity:0.32;flex-shrink:0;transition:color 0.25s,opacity 0.25s;}
+  .stem-live-val{font-family:var(--serif);font-size:0.85rem;font-weight:700;letter-spacing:-0.01em;opacity:0.5;flex-shrink:0;transition:color 0.25s,opacity 0.25s;}
+  .stem-live-arrow{font-size:0.54rem;opacity:0.20;flex-shrink:0;transition:color 0.25s,opacity 0.25s;}
+  .stem-live-fx{font-size:0.58rem;letter-spacing:0.04em;opacity:0.30;font-style:italic;transition:color 0.25s,opacity 0.25s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .stem-tile.active .stem-live-src{color:var(--tod-bg);opacity:0.42;}
+  .stem-tile.active .stem-live-val{color:var(--tod-bg);opacity:0.82;}
+  .stem-tile.active .stem-live-arrow{color:var(--tod-bg);opacity:0.28;}
+  .stem-tile.active .stem-live-fx{color:var(--tod-bg);opacity:0.44;}
+  @keyframes valPulse{0%{opacity:0.25}45%{opacity:1}100%{opacity:0.82}}
+  .stem-live-val.pulsing{animation:valPulse 0.30s ease forwards;}
+
   .stem-canvas{display:block;width:100%;height:22px;margin-bottom:0.85rem;}
   .stem-mute{width:100%;padding:0.35rem 0;font-family:var(--mono);font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;background:transparent;border:1px solid var(--tod-line);color:var(--tod-ink);cursor:crosshair;transition:all 0.18s;display:block;margin-top:auto;}
   .stem-mute:hover{border-color:var(--tod-ink);}
@@ -173,24 +231,14 @@
   .mech-live{display:inline-block;margin-top:0.9rem;font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.28;padding:0.18rem 0.45rem;border:1px solid var(--tod-line);}
   .mech-cell.global-cell{background:var(--tod-faint);}
 
-  /* Global AQI stem tile — visually distinct */
-  .stem-tile.global-stem{
-    background:var(--tod-faint);
-    opacity:0.7;
-    cursor:default;
-  }
-  .stem-tile.global-stem:hover{background:var(--tod-faint);}
+  /* Global AQI stem tile */
+  .stem-tile.global-stem{background:var(--tod-faint);opacity:0.7;cursor:default;}
+  .stem-tile.global-stem:hover{background:var(--tod-faint);transform:none;box-shadow:none;}
   .stem-tile.global-stem .stem-param{opacity:0.6;}
   .stem-tile.global-stem .stem-mute{opacity:0.25;pointer-events:none;}
 
   /* Player top buffer + centered controls */
-  .player-controls-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:2.5rem 0 2rem;
-    gap:0.8rem;
-  }
+  .player-controls-wrap{display:flex;flex-direction:column;align-items:center;padding:2.5rem 0 2rem;gap:0.8rem;}
 
   /* ══ FOOTER ══ */
   footer{position:relative;z-index:1;border-top:1px solid var(--tod-line);padding:2.5rem 2.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;}
@@ -215,15 +263,17 @@
     .poem-label{display:none;}.poem-sub{display:none;}
     .poem-line{grid-template-columns:1fr;}
     .fx-panel{left:1rem;right:1rem;width:auto;}
+    .stems-grid{grid-template-columns:1fr;}
+    .stem-tile{min-height:80px;}
   }
 </style>
 <script>
 (function(){
   var KF=[
-    {h:0,bg:'#0e1420',ink:'#4a8f7a'},{h:5,bg:'#0e1420',ink:'#4a8f7a'},
-    {h:7,bg:'#d4b896',ink:'#3d2010'},{h:17,bg:'#F5F0E8',ink:'#2D5A3D'},
-    {h:20,bg:'#1a1008',ink:'#c87941'},{h:24,bg:'#0e1420',ink:'#4a8f7a'},
-  ];
+  {h:0,bg:'#0e1420',ink:'#4a8f7a'},{h:5,bg:'#0e1420',ink:'#4a8f7a'},
+  {h:7,bg:'#d4b896',ink:'#3d2010'},{h:17,bg:'#F5F0E8',ink:'#2D5A3D'},
+  {h:20,bg:'#1a1008',ink:'#e8d5b0'},{h:24,bg:'#0e1420',ink:'#4a8f7a'},
+];
   function hx(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
   function lp(a,b,t){var ra=hx(a),rb=hx(b);return'#'+[0,1,2].map(function(i){return Math.round(ra[i]+(rb[i]-ra[i])*t).toString(16).padStart(2,'0');}).join('');}
   var now=new Date(),h=now.getHours()+now.getMinutes()/60;
@@ -267,19 +317,21 @@
 </nav>
 
 <section id="hero">
-  <!-- n===1?'blizzard':'city air'indicator -->
   <div class="track-content" id="hero-content">
     <div class="track-nav">
       <button class="track-arrow disabled" id="arrow-prev" aria-label="Previous track">←</button>
       <div>
         <div class="track-label" id="track-nav-label">blizzard</div>
-        <div class="track-sub"><span class="track-dot active" id="dot-1"></span>&nbsp;<span class="track-dot" id="dot-2"></span>&nbsp;&nbsp;01 / 02</div>
+        <div class="track-sub"><span class="track-dot active" id="dot-1"></span>&nbsp;<span class="track-dot" id="dot-2"></span>&nbsp;&nbsp;<span id="track-counter">01</span> / 02</div>
       </div>
       <button class="track-arrow" id="arrow-next" aria-label="Next track">→</button>
     </div>
 
+    <!-- HERO EXPLAINER LINE (NEW) -->
+    <p class="hero-explainer">Six live data sources are rewriting this mix as you read this.</p>
+
     <div class="data-poem" id="data-poem">
-      <!-- rendered by JS per n===1?'blizzard':'city air'-->
+      <!-- rendered by JS -->
     </div>
 
     <div class="hero-statement">
@@ -420,7 +472,55 @@ const liveData={
   cloud:  {norm:0.5, display:'—',label:'Cloud Cover'},
 };
 function getSolarNorm(){const now=new Date(),h=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;return(Math.sin((h/24)*Math.PI*2-Math.PI/2)+1)/2;}
-function setPoem(id,val){const el=document.getElementById(id);if(!el)return;el.textContent=val;el.classList.remove('loading');}
+function setPoem(id,val){
+  const el=document.getElementById(id);if(!el)return;
+  if(el.textContent===val)return;
+  el.textContent=val;
+  el.classList.remove('loading');
+  el.classList.remove('updating');
+  void el.offsetWidth;
+  el.classList.add('updating');
+}
+
+// ── Update tile live data display ────────────────────────────────
+// Maps stem key → {srcDisplay, fxDisplay} for the live row
+function getTileLiveContent(key){
+  const map={
+    subway:{src:'L Train',getVal:()=>liveData.subway.display,getFx:()=>{const v=liveData.subway.norm;return'bits '+Math.round(8-v*5);}},
+    snow:  {src:'precip',getVal:()=>liveData.snow.display,getFx:()=>{const v=liveData.snow.norm;return'wah '+(v*100|0)+'%';}},
+    temp:  {src:'temp',getVal:()=>liveData.temp.display,getFx:()=>{const v=liveData.temp.norm;return'reverb '+(v*70|0)+'%';}},
+    wind:  {src:'wind',getVal:()=>liveData.wind.display,getFx:()=>{const v=liveData.wind.norm;return'filter '+(100+v*3500|0)+'hz';}},
+    market:{src:'btc',getVal:()=>liveData.market.display,getFx:()=>{const v=liveData.market.norm;const hz=((v-0.5)*52).toFixed(0);return'shift '+(hz>0?'+':'')+hz+'hz';}},
+    time:  {src:'time',getVal:()=>liveData.time.display,getFx:()=>{const v=liveData.time.norm;return'hp '+(80+(1-v)*2120|0)+'hz';}},
+    t2perc:{src:'L Train',getVal:()=>liveData.subway.display,getFx:()=>{const v=liveData.subway.norm;return'room '+(0.1+v*0.85).toFixed(2);}},
+    t2hats:{src:'btc',getVal:()=>liveData.market.display,getFx:()=>{const v=liveData.market.norm;const mag=Math.abs(v-0.5)*2;return'delay '+(mag*85|0)+'%';}},
+    t2piano:{src:'temp',getVal:()=>liveData.temp.display,getFx:()=>{const v=liveData.temp.norm;return'verb '+(5+v*75|0)+'%';}},
+    t2cc:  {src:'clouds',getVal:()=>liveData.cloud.display,getFx:()=>{const v=liveData.cloud.norm;return'filter '+(v*90|0)+'%';}},
+  };
+  return map[key]||null;
+}
+
+function updateTileLiveRow(key){
+  const valEl=document.getElementById('live-val-'+key);
+  const fxEl=document.getElementById('live-fx-'+key);
+  if(!valEl||!fxEl)return;
+  const cfg=getTileLiveContent(key);
+  if(!cfg)return;
+  const newVal=cfg.getVal();
+  const newFx=cfg.getFx();
+  if(valEl.textContent!==newVal&&newVal!=='—'){
+    valEl.textContent=newVal;
+    valEl.classList.remove('pulsing');
+    void valEl.offsetWidth; // reflow to restart animation
+    valEl.classList.add('pulsing');
+  }
+  fxEl.textContent=newFx;
+}
+
+function updateAllTileLiveRows(){
+  STEMS.forEach(k=>updateTileLiveRow(k));
+}
+
 function updateTimeStem(){
   const now=new Date();
   const hh=String(now.getHours()).padStart(2,'0'),mm=String(now.getMinutes()).padStart(2,'0');
@@ -430,6 +530,7 @@ function updateTimeStem(){
   document.getElementById('nav-status').textContent=`· live · nyc · ${hh}:${mm} ·`;
   const lb=document.getElementById('mech-live-time');if(lb)lb.textContent=`${hh}:${mm}`;
   const lb2=document.getElementById('mech-live-kick');if(lb2)lb2.textContent=`${hh}:${mm}`;
+  updateTileLiveRow('time');
 }
 updateTimeStem();setInterval(updateTimeStem,30000);
 
@@ -451,8 +552,8 @@ async function fetchWeather(){
     const lt=document.getElementById('mech-live-t2piano');if(lt)lt.textContent=Math.round(t)+'°F';
     const ls=document.getElementById('mech-live-snow');if(ls)ls.textContent=p.toFixed(1)+' mm';
     const lw=document.getElementById('mech-live-wind');if(lw)lw.textContent=Math.round(w)+' mph';
-    const lt2=document.getElementById('mech-live-t2piano');if(lt2)lt2.textContent=Math.round(t)+'°F';
     const lcc=document.getElementById('mech-live-t2cc');if(lcc)lcc.textContent=Math.round(cc)+'%';
+    updateAllTileLiveRows();
   }catch(e){console.warn('Weather:',e.message);}
 }
 fetchWeather();setInterval(fetchWeather,60000);
@@ -465,7 +566,7 @@ async function fetchMTA(){
     liveData.subway={norm:d.norm,display:d.display,label:'L Train',raw:d.combined};
     setPoem('poem-subway',d.display);
     const lm=document.getElementById('mech-live-t2perc');if(lm)lm.textContent=d.display;
-    const lm2=document.getElementById('mech-live-t2perc');if(lm2)lm2.textContent=d.display;
+    updateTileLiveRow('subway');updateTileLiveRow('t2perc');
   }catch(e){console.warn('MTA:',e.message);}
 }
 fetchMTA();setInterval(fetchMTA,60000);
@@ -482,7 +583,6 @@ async function fetchAQI(){
     setPoem('poem-aqi',`AQI ${aqi}`);
     document.getElementById('aqi-readout').textContent=`· AQI ${aqi} · ${aqiLabel} ·`;
     const la=document.getElementById('mech-live-global');if(la)la.textContent=`AQI ${aqi}`;
-    // Update global AQI filter
     if(aqiFilterNode){
       const freq=2000+18000*(1-norm);
       aqiFilterNode.frequency.setTargetAtTime(freq,Tone.now(),3.0);
@@ -519,8 +619,8 @@ function connectCoinbase(){
         liveData.market={norm:computeBtcDeltaNorm(),display:`$${Math.round(price).toLocaleString()}`,delta:delta60,raw:price,label:'BTC-USD'};
         setPoem('poem-market',`$${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)}`);
         document.getElementById('btc-readout').textContent=`· BTC $${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)} ·`;
-        const lmk=document.getElementById('mech-live-t2hats');if(lmk)lmk.textContent=`$${Math.round(price).toLocaleString()}`;
         const lh=document.getElementById('mech-live-t2hats');if(lh)lh.textContent=`$${Math.round(price).toLocaleString()}${formatBtcDelta(delta60)}`;
+        updateTileLiveRow('market');updateTileLiveRow('t2hats');
       }
     }catch(err){}
   };
@@ -570,9 +670,8 @@ const MECH_LOGIC_2={
   global:'NYC Air Quality Index maps to a master lowpass filter across the entire mix. Clean air = full spectrum open. Poor air = rolled off, muffled.',
 };
 
-// ── NORM_FNS (both tracks) ───────────────────────────────────────
+// ── NORM_FNS ────────────────────────────────────────────────────
 const NORM_FNS={
-  // Track 1
   'subway.bits':     v=>(8-v)/5,
   'subway.filter':   v=>(v-300)/3500,
   'subway.feedback': v=>(v-10)/55,
@@ -589,7 +688,6 @@ const NORM_FNS={
   'market.tremolo':  v=>(v-0.5)/7.5,
   'time.hipass':     v=>1-(v-80)/2120,
   'time.bits':       v=>(v-3)/5,
-  // City Air
   'perc.roomSize':   v=>v,
   'perc.phaserRate': v=>v/3,
   'hats.delayWet':   v=>v/100,
@@ -602,8 +700,8 @@ const NORM_FNS={
 
 // ── Track state ──────────────────────────────────────────────────
 let currentTrack=1;
-let TRACK=null; // loaded from track.json (n===1?'blizzard':'city air'1)
-let STEMS=[]; // active stems array
+let TRACK=null;
+let STEMS=[];
 const stemData1={};
 const stemData2={};
 let activeStemData=stemData1;
@@ -613,7 +711,7 @@ let fxPanelConfig2={},fxDisplay2={};
 const TRACK1_STEMS_KEYS=['subway','snow','temp','wind','market','time'];
 const TRACK2_STEMS_KEYS=['t2kick','t2perc','t2hats','t2piano','t2cc','t2aqi'];
 
-// ── Shared audio chain (created once) ───────────────────────────
+// ── Shared audio chain ───────────────────────────────────────────
 let masterLimiter=null,masterCompressor=null,aqiFilterNode=null;
 let sharedChainReady=false;
 function createSharedChain(){
@@ -624,7 +722,6 @@ function createSharedChain(){
   toneAnalyser=new Tone.Analyser('fft',2048);
   aqiFilterNode.connect(toneAnalyser);
   sharedChainReady=true;
-  // Apply current AQI immediately
   if(liveData.aqi.norm>0){
     const freq=2000+18000*(1-liveData.aqi.norm);
     aqiFilterNode.frequency.setValueAtTime(freq,Tone.now());
@@ -634,7 +731,7 @@ function createSharedChain(){
 // ── initAudio1 ───────────────────────────────────────────────────
 let isReady1=false,isReady2=false,initInProgress=false;
 function setStatus(msg){document.getElementById('player-status').textContent=msg;}
-const FADE_DURATION=(8*4*60)/127; // ~15.1s at 127 BPM
+const FADE_DURATION=(8*4*60)/127;
 
 async function initAudio1(){
   if(isReady1)return true;
@@ -649,7 +746,6 @@ async function initAudio1(){
     const masterBus=new Tone.Gain(0).connect(aqiFilterNode);
     stemData1._masterBus=masterBus;
     const revTemp=new Tone.Reverb({decay:2.5,preDelay:0.01});await revTemp.generate();
-
     function makeRoute1(key,fxNodes){
       const s=stemData1[key],stemCfg=TRACK.stems.find(x=>x.key===key);
       s.masterGain=new Tone.Gain(1).connect(masterBus);
@@ -661,12 +757,10 @@ async function initAudio1(){
       node.connect(s.wetGain);
       s.analyser=new Tone.Analyser('fft',512);s.masterGain.connect(s.analyser);
     }
-
     stemData1.subway.fx.bits=new Tone.BitCrusher(8);
     stemData1.subway.fx.filter=new Tone.Filter({frequency:2000,type:'lowpass'});
     stemData1.subway.fx.delay=new Tone.FeedbackDelay({delayTime:'8n',feedback:0.2,wet:0.5});
     makeRoute1('subway',[stemData1.subway.fx.bits,stemData1.subway.fx.filter,stemData1.subway.fx.delay]);
-
     const snowLfoFreq=(TRACK_BPM/60)/2;
     stemData1.snow.fx.wah=new Tone.AutoWah({baseFrequency:100,octaves:3,sensitivity:-20,Q:2,gain:2,wet:0.8});
     stemData1.snow.fx.autoFilter=new Tone.AutoFilter({frequency:snowLfoFreq,baseFrequency:200,octaves:3,wet:0.0}).start();
@@ -677,24 +771,19 @@ async function initAudio1(){
     stemData1.snow.fx.hiCut=new Tone.Filter({frequency:5000,type:'lowpass',rolloff:-12});
     stemData1.snow.fx.levelTrim=new Tone.Gain(0.5);
     makeRoute1('snow',[stemData1.snow.fx.wah,stemData1.snow.fx.autoFilter,stemData1.snow.fx.vibrato,stemData1.snow.fx.pumpGain,stemData1.snow.fx.hiCut,stemData1.snow.fx.levelTrim]);
-
     stemData1.temp.fx.ping=new Tone.PingPongDelay({delayTime:'8n',feedback:0.1,wet:0.0});
     stemData1.temp.fx.chorus=new Tone.Chorus({frequency:2,delayTime:2.5,depth:0.15,wet:0.3}).start();
     stemData1.temp.fx.reverb=revTemp;
     makeRoute1('temp',[stemData1.temp.fx.ping,stemData1.temp.fx.chorus,stemData1.temp.fx.reverb]);
-
     stemData1.wind.fx.filter=new Tone.Filter({frequency:800,type:'lowpass'});
     stemData1.wind.fx.dist=new Tone.Distortion({distortion:0.0,wet:0.0});
     makeRoute1('wind',[stemData1.wind.fx.filter,stemData1.wind.fx.dist]);
-
     stemData1.market.fx.freqShift=new Tone.FrequencyShifter(0);
     stemData1.market.fx.tremolo=new Tone.Tremolo({frequency:1,depth:0.1,wet:0.5}).start();
     makeRoute1('market',[stemData1.market.fx.freqShift,stemData1.market.fx.tremolo]);
-
     stemData1.time.fx.hipass=new Tone.Filter({frequency:1200,type:'highpass'});
     stemData1.time.fx.bits=new Tone.BitCrusher(8);
     makeRoute1('time',[stemData1.time.fx.hipass,stemData1.time.fx.bits]);
-
     await Promise.race([Tone.loaded(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),25000))]);
     isReady1=true;initInProgress=false;
     document.getElementById('track-loading').classList.remove('visible');
@@ -719,15 +808,11 @@ async function initAudio2(){
     createSharedChain();
     const masterBus=new Tone.Gain(0).connect(aqiFilterNode);
     stemData2._masterBus=masterBus;
-
-    // ── Per-stem gain trim to prevent clipping ──
-    // Each stem gets a trim gain before the master bus
     const STEM2_TRIMS={t2kick:0.75,t2perc:0.65,t2hats:0.7,t2piano:0.8,t2cc:0.6};
-
     function makeRoute2(key,fxNodes){
       const s=stemData2[key];
       const stemCfg=TRACK2_STEMS_CFG.find(x=>x.key===key);
-      if(!stemCfg||stemCfg.isGlobal)return; // skip virtual AQI tile
+      if(!stemCfg||stemCfg.isGlobal)return;
       const trim=new Tone.Gain(STEM2_TRIMS[key]||0.7);
       trim.connect(masterBus);
       s.masterGain=new Tone.Gain(1).connect(trim);
@@ -741,16 +826,10 @@ async function initAudio2(){
       }
       s.analyser=new Tone.Analyser('fft',512);s.masterGain.connect(s.analyser);
     }
-
-    // Kick — dry, mutable, no data effects
     makeRoute2('t2kick',[]);
-
-    // Perc → L Train: Freeverb + Phaser
     stemData2.t2perc.fx.reverb=new Tone.Freeverb({roomSize:0.3,dampening:4000,wet:0.0});
     stemData2.t2perc.fx.phaser=new Tone.Phaser({frequency:0.5,octaves:2,baseFrequency:500,wet:0.0});
     makeRoute2('t2perc',[stemData2.t2perc.fx.reverb,stemData2.t2perc.fx.phaser]);
-
-    // Hats → BTC: LFO tremolo at 1/4 rate phase 180 + triplet delay + Freeverb
     stemData2.t2hats.fx.lfoGain=new Tone.Gain(1);
     stemData2.t2hats.fx.lfo=new Tone.LFO({type:'sine',frequency:0.5,min:0.5,max:1.0,phase:180}).start();
     stemData2.t2hats.fx.lfo.connect(stemData2.t2hats.fx.lfoGain.gain);
@@ -758,24 +837,15 @@ async function initAudio2(){
     stemData2.t2hats.fx.reverb=new Tone.Freeverb({roomSize:0.2,dampening:5000,wet:0.0});
     stemData2.t2hats.fx.hpFilter=new Tone.Filter({frequency:6000,type:'highpass'});
     makeRoute2('t2hats',[stemData2.t2hats.fx.hpFilter,stemData2.t2hats.fx.lfoGain,stemData2.t2hats.fx.delay,stemData2.t2hats.fx.reverb]);
-
-    // Piano → Temperature: Freeverb + Chorus
     stemData2.t2piano.fx.reverb=new Tone.Freeverb({roomSize:0.5,dampening:2000,wet:0.0});
     stemData2.t2piano.fx.chorus=new Tone.Chorus({frequency:1.5,delayTime:3.5,depth:0.08,wet:0.0}).start();
     makeRoute2('t2piano',[stemData2.t2piano.fx.reverb,stemData2.t2piano.fx.chorus]);
-
-    // Synth (cc) → Cloud Cover: Sawtooth AutoFilter + Chorus + Freeverb
     stemData2.t2cc.fx.autoFilter=new Tone.AutoFilter({frequency:3,type:'sawtooth',baseFrequency:300,octaves:3.0,wet:0.0}).start();
     stemData2.t2cc.fx.chorus=new Tone.Chorus({frequency:1,delayTime:4,depth:0.12,wet:0.25}).start();
     stemData2.t2cc.fx.reverb=new Tone.Freeverb({roomSize:0.65,dampening:1500,wet:0.2});
     makeRoute2('t2cc',[stemData2.t2cc.fx.autoFilter,stemData2.t2cc.fx.chorus,stemData2.t2cc.fx.reverb]);
-
-    // t2aqi — virtual global tile, no player
     stemData2.t2aqi={player:null,dryGain:null,wetGain:null,masterGain:null,fx:{},analyser:null,active:false,muted:false,isGlobal:true};
-
     await Promise.race([Tone.loaded(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),25000))]);
-
-    // Build city air fxPanel config
     fxPanelConfig2={
       t2kick:{ title:'Kick · Anchor', rows:[], note:'The kick is the fixed point. No data effects. Everything moves around it.' },
       t2perc:{ title:'L Train → Percussion', rows:[
@@ -802,7 +872,6 @@ async function initAudio2(){
       t2piano:{reverbWet:5,chorusDepth:5},
       t2cc:{filterWet:0,chorusDepth:25},
     };
-
     isReady2=true;initInProgress=false;
     document.getElementById('track-loading').classList.remove('visible');
     setStatus('· ready ·');
@@ -828,12 +897,10 @@ function startTrack(n){
     sd._masterBus.gain.setValueAtTime(0,t);
     sd._masterBus.gain.linearRampToValueAtTime(0.72,t+fadeDur);
   }
-  // Activate all stems with data by default
   stems.forEach(key=>{
     const s=sd[key];if(!s||!s.dryGain)return;
     const cfg=n===2?TRACK2_STEMS_CFG.find(x=>x.key===key):null;
-    if(cfg?.isGlobal)return; // t2aqi has no player
-    // t2kick starts dry but mutable (no data effects, user can mute)
+    if(cfg?.isGlobal)return;
     if(key==='t2kick'){
       s.active=false;
       s.dryGain.gain.setValueAtTime(1,t);
@@ -877,18 +944,12 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function switchTrack(n){
   if(n===currentTrack)return;
   if(initInProgress)return;
-
-  // Fade out visually
   ['hero-content','player-content'].forEach(id=>{
     document.getElementById(id).classList.add('switching');
   });
-
-  // Fade out + stop current audio
   const mb=activeStemData._masterBus;
   if(mb){mb.gain.rampTo(0,0.3);}
   await sleep(380);
-
-  // Hard stop all current players
   const prevStems=currentTrack===1?TRACK1_STEMS_KEYS:TRACK2_STEMS_KEYS;
   const prevSD=currentTrack===1?stemData1:stemData2;
   prevStems.forEach(k=>{
@@ -903,15 +964,11 @@ async function switchTrack(n){
   });
   if(mb){mb.gain.cancelScheduledValues(Tone.now());mb.gain.setValueAtTime(0,Tone.now());}
   if(fxPanelKey)closeFxPanel();
-
-  // Switch state
   currentTrack=n;
   activeStemData=n===1?stemData1:stemData2;
   STEMS=n===1?[...TRACK1_STEMS_KEYS]:[...TRACK2_STEMS_KEYS];
   fxPanelConfig=n===1?fxPanelConfig1:fxPanelConfig2;
   fxDisplay=n===1?fxDisplay1:fxDisplay2;
-
-  // Rebuild UI
   renderPoem(n);
   renderStemsGrid(n);
   renderMechGrid(n);
@@ -920,19 +977,17 @@ async function switchTrack(n){
   document.getElementById('player-hint').textContent=n===1?
     'Click any stem tile to toggle live data on or off — and see the effects it\'s applying in real time.' :
     'Click any stem tile to toggle live data — kick is the fixed anchor and cannot be modulated.';
-
   initStemCanvases();
   attachTileInteractions();
   attachMuteInteractions();
   updateTimeStem();
   fetchWeather();fetchMTA();
-
-  // Visual in
   ['hero-content','player-content'].forEach(id=>{
     document.getElementById(id).classList.remove('switching');
   });
-
-  // Init audio if needed, then start if was playing
+  document.body.style.transition='background 2s ease, color 2s ease';
+  applyTodPalette();
+  setTimeout(()=>{document.body.style.transition='background 120s linear, color 120s linear';},2100);
   const wasPlaying=isPlaying;
   if(n===1){
     if(!isReady1){await initAudio1();}
@@ -941,8 +996,6 @@ async function switchTrack(n){
     if(!isReady2){await initAudio2();}
     if(wasPlaying)startTrack(2);
   }
-
-  // Sync play button state
   if(wasPlaying){
     document.getElementById('play-icon').innerHTML='<rect x="0" y="0" width="3" height="12"/><rect x="6" y="0" width="3" height="12"/>';
     document.getElementById('play-label').textContent='Pause';
@@ -960,10 +1013,14 @@ function updateTrackDots(n){
   if(d2)d2.classList.toggle('active',n===2);
   const label=document.getElementById('track-nav-label');
   if(label)label.textContent=n===1?'blizzard':'city air';
+  const counter=document.getElementById('track-counter');
+  if(counter)counter.textContent=n===1?'01':'02';
   const prev=document.getElementById('arrow-prev');
   const next=document.getElementById('arrow-next');
   if(prev)prev.classList.toggle('disabled',n===1);
   if(next)next.classList.toggle('disabled',n===2);
+  const aside=document.querySelector('.manifesto-aside');
+  if(aside)aside.style.display=n===1?'':'none';
 }
 
 // ── Render functions ─────────────────────────────────────────────
@@ -976,7 +1033,6 @@ function renderPoem(n){
       <span class="poem-sub">${l.sub}</span>
     </div>
   `).join('');
-  // Populate existing values
   updateTimeStem();
   if(liveData.temp.display!=='—')setPoem('poem-temp',liveData.temp.display);
   if(liveData.wind.display!=='—')setPoem('poem-wind',liveData.wind.display);
@@ -988,26 +1044,39 @@ function renderPoem(n){
 }
 
 function renderStemsGrid(n){
-  const stms=n===1?(TRACK?TRACK.stems:[]):TRACK2_STEMS_CFG;
+  // Track 1 uses TRACK.stems (from track.json), track 2 uses TRACK2_STEMS_CFG excluding t2kick
+  const stms=n===1?(TRACK?TRACK.stems:[]):TRACK2_STEMS_CFG.filter(s=>s.key!=='t2kick');
   if(!stms||stms.length===0)return;
-  document.getElementById('stems-grid').innerHTML=stms.map(s=>`
+  document.getElementById('stems-grid').innerHTML=stms.map(s=>{
+    const hasLive=!s.isGlobal&&getTileLiveContent(s.key)!==null;
+    const liveRow=hasLive?`
+      <div class="stem-live-row">
+        <span class="stem-live-src">${getTileLiveContent(s.key).src}</span>
+        <span class="stem-live-val" id="live-val-${s.key}">—</span>
+        <span class="stem-live-arrow">→</span>
+        <span class="stem-live-fx" id="live-fx-${s.key}">—</span>
+      </div>`:'<div class="stem-live-row"></div>';
+    return `
     <div class="stem-tile${s.isGlobal?' global-stem':''}" id="tile-${s.key}" data-stem="${s.key}">
       <div class="stem-badge" id="badge-${s.key}">${s.isGlobal?'global':'dry'}</div>
       <div class="stem-source">${s.source||s.key}</div>
       <div class="stem-param"${s.key==='time'?' id="time-display"':''}>${s.key==='time'?'—:—':s.label}</div>
       <div class="stem-target">${s.target||''}</div>
+      ${liveRow}
       <canvas class="stem-canvas" id="canvas-${s.key}"></canvas>
       <button class="stem-mute" id="mute-${s.key}">${s.isGlobal?'—':'mute'}</button>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+  // Populate live values immediately
+  updateAllTileLiveRows();
 }
 
 function renderMechGrid(n){
   const mechLogic=n===1?MECH_LOGIC_1:MECH_LOGIC_2;
-  const stms=n===1?(TRACK?TRACK.stems:[]):TRACK2_STEMS_CFG;
+  const stms=n===1?(TRACK?TRACK.stems:[]):TRACK2_STEMS_CFG.filter(s=>s.key!=='t2kick');
   if(!stms||stms.length===0)return;
-  let cells=stms.map((s,i)=>`
-    <div class="mech-cell">
+  const cells=stms.map((s,i)=>`
+    <div class="mech-cell${s.isGlobal?' global-cell':''}">
       <div class="mech-index">0${i+1}</div>
       <div class="mech-source">${s.source||s.key}</div>
       <div class="mech-stem">${s.label}</div>
@@ -1016,62 +1085,38 @@ function renderMechGrid(n){
       <span class="mech-live" id="mech-live-${s.key}">—</span>
     </div>
   `).join('');
-  // Add global AQI cell for city air
-  if(n===2){
-    cells+=`
-    <div class="mech-cell global-cell">
-      <div class="mech-index">07</div>
-      <div class="mech-source">Air Quality · NYC</div>
-      <div class="mech-stem">Global Filter</div>
-      <div class="mech-target">→ master lowpass · all stems</div>
-      <div class="mech-logic">${mechLogic.global||''}</div>
-      <span class="mech-live" id="mech-live-global">—</span>
-    </div>`;
-  }
   document.getElementById('mechanism-grid').innerHTML=cells;
+  populateMechLive(n);
 }
 
-// ── Swipe gesture ────────────────────────────────────────────────
-let touchStartX=0,touchStartY=0;
-let mouseStartX=0,mouseIsDown=false;
-
-document.addEventListener('touchstart',e=>{
-  touchStartX=e.touches[0].clientX;
-  touchStartY=e.touches[0].clientY;
-},{passive:true});
-document.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-touchStartX;
-  const dy=e.changedTouches[0].clientY-touchStartY;
-  if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>55){
-    if(dx<0&&currentTrack===1)switchTrack(2); // swipe left → city air... wait user said right=2
-    if(dx>0&&currentTrack===2)switchTrack(1); // swipe right → n===1?'blizzard':'city air'1
-    // User said: swipe right = song 2, swipe left = back to song 1
-    // Swipe RIGHT means finger moves RIGHT (positive dx)... let me re-read
-    // "swipe right for song 2, left back to song 1"
-    // Swipe right = finger moves right = positive dx → city air
-    // But that's a bit unusual (usually right swipe = go back in most UIs)
-    // Following user's specification exactly:
+function populateMechLive(n){
+  function set(id,val){const el=document.getElementById('mech-live-'+id);if(el&&val!=='—')el.textContent=val;}
+  if(n===1){
+    set('subway',liveData.subway.display);set('snow',liveData.snow.display);
+    set('temp',liveData.temp.display);set('wind',liveData.wind.display);
+    set('market',liveData.market.display);set('time',liveData.time.display);
+  }else{
+    set('t2perc',liveData.subway.display);set('t2hats',liveData.market.display);
+    set('t2piano',liveData.temp.display);set('t2cc',liveData.cloud.display);
+    set('t2aqi',liveData.aqi.display);
   }
-},{passive:true});
+}
 
-// Correct interpretation: "swipe right" = drag right = positive dx
+// ── Swipe + keyboard ─────────────────────────────────────────────
+let touchStartX=0,touchStartY=0;
 document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;},{passive:true});
 document.addEventListener('touchend',e=>{
   const dx=e.changedTouches[0].clientX-touchStartX;
   const dy=e.changedTouches[0].clientY-touchStartY;
   if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>55){
-    if(dx>0&&currentTrack===1)switchTrack(2); // swipe right → city air
-    if(dx<0&&currentTrack===2)switchTrack(1); // swipe left → n===1?'blizzard':'city air'1
+    if(dx>0&&currentTrack===1)switchTrack(2);
+    if(dx<0&&currentTrack===2)switchTrack(1);
   }
 },{passive:true});
-
-// Keyboard arrows
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'&&currentTrack===1)switchTrack(2);
   if(e.key==='ArrowLeft'&&currentTrack===2)switchTrack(1);
 });
-
-// Arrow buttons
 document.getElementById('arrow-prev').addEventListener('click',()=>{if(currentTrack!==1)switchTrack(1);});
 document.getElementById('arrow-next').addEventListener('click',()=>{if(currentTrack!==2)switchTrack(2);});
 
@@ -1081,6 +1126,7 @@ function runModulation(){
   if(currentTrack===1)runModulation1();
   else runModulation2();
   refreshFxPanel();
+  updateAllTileLiveRows();
 }
 
 function runModulation1(){
@@ -1137,8 +1183,6 @@ function runModulation1(){
 
 function runModulation2(){
   const now=Tone.now();
-
-  // Perc (subway key) → L Train delay: reverb room size + phaser rate
   if(stemData2.t2perc?.active){
     const v=liveData.subway.norm;
     const roomSize=0.1+v*0.85;
@@ -1149,24 +1193,19 @@ function runModulation2(){
     stemData2.t2perc.fx.phaser.wet.setTargetAtTime(v*0.6,now,0.3);
     fxDisplay2.t2perc={roomSize:+roomSize.toFixed(2),phaserRate:+phaserRate.toFixed(1)};
   }
-
-  // Hats → BTC delta: LFO magnitude + delay rattle
   if(stemData2.t2hats?.active){
     const v=liveData.market.norm;
-    const mag=Math.abs(v-0.5)*2; // 0=flat, 1=big move
+    const mag=Math.abs(v-0.5)*2;
     const delayWet=Math.round(mag*85);
     const reverbWet=Math.round(mag*40);
-    // LFO: increases in magnitude as BTC moves, 1/4 rate phase 180
-    stemData2.t2hats.fx.lfo.frequency.setTargetAtTime(0.5,Tone.now(),0.3); // quarter rate
-    stemData2.t2hats.fx.lfo.min=1-mag*0.6; // flat market=barely any tremolo, big move=deep
+    stemData2.t2hats.fx.lfo.frequency.setTargetAtTime(0.5,Tone.now(),0.3);
+    stemData2.t2hats.fx.lfo.min=1-mag*0.6;
     stemData2.t2hats.fx.lfo.max=1.0;
     stemData2.t2hats.fx.delay.feedback.setTargetAtTime(0.2+mag*0.45,Tone.now(),0.2);
     stemData2.t2hats.fx.delay.wet.setTargetAtTime(mag*0.85,Tone.now(),0.2);
     stemData2.t2hats.fx.reverb.wet.setTargetAtTime(mag*0.4,Tone.now(),0.3);
     fxDisplay2.t2hats={delayWet,reverbWet};
   }
-
-  // Piano (temp key) → Temperature: reverb + chorus
   if(stemData2.t2piano?.active){
     const v=liveData.temp.norm;
     const reverbWet=Math.round(5+v*75);
@@ -1178,15 +1217,11 @@ function runModulation2(){
     stemData2.t2piano.fx.chorus.wet.setTargetAtTime(v*0.55,now,0.4);
     fxDisplay2.t2piano={reverbWet,chorusDepth};
   }
-
-  // Synth (cc key) → Cloud Cover: autoFilter sweep
-  // Heavy clouds (high norm) = slow, deep, muffled filter
-  // Clear sky (low norm) = fast, bright, open filter
   if(stemData2.t2cc?.active){
-    const v=liveData.cloud.norm; // 0=clear, 1=overcast
+    const v=liveData.cloud.norm;
     const filterWet=Math.round(v*90);
-    const chorusDepth=Math.round(10+(1-v)*55); // clear sky = more chorus
-    stemData2.t2cc.fx.autoFilter.frequency.setTargetAtTime(0.3+v*0.5+(1-v)*6,now,1.0); // overcast=slow, clear=fast
+    const chorusDepth=Math.round(10+(1-v)*55);
+    stemData2.t2cc.fx.autoFilter.frequency.setTargetAtTime(0.3+v*0.5+(1-v)*6,now,1.0);
     stemData2.t2cc.fx.autoFilter.octaves=1+(1-v)*3;
     stemData2.t2cc.fx.autoFilter.wet.setTargetAtTime(0.2+v*0.7,now,0.8);
     stemData2.t2cc.fx.chorus.depth=0.08+(1-v)*0.5;
@@ -1199,7 +1234,6 @@ setInterval(runModulation,100);
 // ── Stem canvases ────────────────────────────────────────────────
 const stemCanvases={};
 function initStemCanvases(){
-  // Clear old canvases
   Object.keys(stemCanvases).forEach(k=>delete stemCanvases[k]);
   STEMS.forEach((k,ki)=>{
     const el=document.getElementById('canvas-'+k);if(!el)return;
@@ -1279,18 +1313,21 @@ function refreshFxPanel(){
   });
 }
 
-// ── Tile + mute interactions ─────────────────────────────────────
+// ── Tile + mute interactions (with click spring) ──────────────────
 function attachTileInteractions(){
   STEMS.forEach(key=>{
     const tile=document.getElementById('tile-'+key),badge=document.getElementById('badge-'+key);
     if(!tile)return;
     const cfg=currentTrack===2?TRACK2_STEMS_CFG.find(x=>x.key===key):null;
-    if(cfg?.isGlobal)return; // AQI tile not interactive
+    if(cfg?.isGlobal)return;
     tile.addEventListener('click',e=>{
       if(e.target.classList.contains('stem-mute'))return;
       if(currentTrack===1&&!isReady1)return;
       if(currentTrack===2&&!isReady2)return;
       const s=activeStemData[key];if(!s||!s.dryGain)return;
+      // Spring animation
+      tile.classList.add('clicking');
+      setTimeout(()=>tile.classList.remove('clicking'),120);
       if(s.active){
         s.active=false;s.dryGain.gain.rampTo(1,0.35);s.wetGain.gain.rampTo(0,0.35);
         tile.classList.remove('active');badge.textContent='dry';
@@ -1307,7 +1344,7 @@ function attachMuteInteractions(){
   STEMS.forEach(key=>{
     const btn=document.getElementById('mute-'+key);if(!btn)return;
     const cfg=currentTrack===2?TRACK2_STEMS_CFG.find(x=>x.key===key):null;
-    if(cfg?.isGlobal)return; // no mute on global tile
+    if(cfg?.isGlobal)return;
     btn.addEventListener('click',e=>{
       e.stopPropagation();const s=activeStemData[key];if(!s)return;
       s.muted=!s.muted;btn.textContent=s.muted?'unmute':'mute';btn.classList.toggle('is-muted',s.muted);
@@ -1345,10 +1382,14 @@ async function _startPlayback(){
   document.addEventListener(evt,dismissEntry,{once:true,passive:true});
 });
 
-// ── Play button ──────────────────────────────────────────────────
+// ── Play button (with click spring) ─────────────────────────────
 document.getElementById('master-play-btn').addEventListener('click',async()=>{
   if(typeof Tone==='undefined'){setStatus('· Tone.js not loaded ·');return;}
-  const icon=document.getElementById('play-icon'),label=document.getElementById('play-label'),btn=document.getElementById('master-play-btn');
+  const btn=document.getElementById('master-play-btn');
+  const icon=document.getElementById('play-icon'),label=document.getElementById('play-label');
+  // Click spring
+  btn.classList.add('clicking');
+  setTimeout(()=>btn.classList.remove('clicking'),120);
   if((currentTrack===1&&!isReady1)||(currentTrack===2&&!isReady2)){
     gestureListened=true;
     document.getElementById('entry-overlay').classList.add('dismissed');
@@ -1369,16 +1410,22 @@ document.getElementById('master-play-btn').addEventListener('click',async()=>{
 });
 
 // ── TOD palette ──────────────────────────────────────────────────
-const TOD_KEYFRAMES=[
-  {h:0,bg:'#0e1420',ink:'#4a8f7a'},{h:5,bg:'#0e1420',ink:'#4a8f7a'},
-  {h:7,bg:'#d4b896',ink:'#3d2010'},{h:17,bg:'#F5F0E8',ink:'#2D5A3D'},
-  {h:20,bg:'#1a1008',ink:'#c87941'},{h:24,bg:'#0e1420',ink:'#4a8f7a'},
+const TOD_KEYFRAMES_1=[
+  {h:0, bg:'#0e1420',ink:'#4a8f7a'},{h:5, bg:'#0e1420',ink:'#4a8f7a'},
+  {h:7, bg:'#d4b896',ink:'#3d2010'},{h:17,bg:'#F5F0E8',ink:'#2D5A3D'},
+  {h:20,bg:'#1a1008',ink:'#e8d5b0'},{h:24,bg:'#0e1420',ink:'#4a8f7a'},
+];
+const TOD_KEYFRAMES_2=[
+  {h:0, bg:'#12100e',ink:'#8a7a6a'},{h:5, bg:'#12100e',ink:'#8a7a6a'},
+  {h:7, bg:'#c8b49a',ink:'#4a2e1a'},{h:17,bg:'#ede8e0',ink:'#5c3d20'},
+  {h:20,bg:'#1e120a',ink:'#b87040'},{h:24,bg:'#12100e',ink:'#8a7a6a'},
 ];
 function lerpColor(a,b,t){const ra=hexToRgb(a),rb=hexToRgb(b);return'#'+[0,1,2].map(i=>Math.round(ra[i]+(rb[i]-ra[i])*t).toString(16).padStart(2,'0')).join('');}
 function rgbToRgba(hex,alpha){const[r,g,b]=hexToRgb(hex);return`rgba(${r},${g},${b},${alpha})`;}
 function getTodPalette(){
   const now=new Date(),h=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;
-  const kf=TOD_KEYFRAMES;let lo=kf[kf.length-2],hi=kf[kf.length-1];
+  const kf=currentTrack===2?TOD_KEYFRAMES_2:TOD_KEYFRAMES_1;
+  let lo=kf[kf.length-2],hi=kf[kf.length-1];
   for(let i=0;i<kf.length-1;i++){if(h>=kf[i].h&&h<kf[i+1].h){lo=kf[i];hi=kf[i+1];break;}}
   const t=(h-lo.h)/(hi.h-lo.h);
   return{bg:lerpColor(lo.bg,hi.bg,t),ink:lerpColor(lo.ink,hi.ink,t)};
@@ -1406,8 +1453,6 @@ async function loadTrack(){
     TRACK=await res.json();
     STEMS=[...TRACK1_STEMS_KEYS];
     activeStemData=stemData1;
-
-    // Build fxPanelConfig1 from track.json
     TRACK.stems.forEach(s=>{
       fxPanelConfig1[s.key]={
         title:s.fxPanel.title,
@@ -1424,8 +1469,6 @@ async function loadTrack(){
     };
     fxPanelConfig=fxPanelConfig1;
     fxDisplay=fxDisplay1;
-
-    // Render initial UI (n===1?'blizzard':'city air'1)
     renderPoem(1);
     renderStemsGrid(1);
     renderMechGrid(1);
