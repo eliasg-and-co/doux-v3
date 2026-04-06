@@ -732,31 +732,31 @@ strong { color: var(--text-primary); }
         <div class="edu-card">
           <div class="edu-num">01</div>
           <div class="edu-headline">The freeze</div>
-          <div class="edu-body">Edison's phonograph, 1877. Every format since has assumed a recording is a fixed object. Vinyl, CD, MP3, stream — all frozen.</div>
+          <div class="edu-body">Edison's recorded the human voice for the first time in 1877. Every format since has assumed a recording is a fixed object. Vinyl, CD, MP3, stream, Spotify, Suno...</div>
         </div>
 
         <div class="edu-card">
           <div class="edu-num">02</div>
           <div class="edu-headline">The acquisition</div>
-          <div class="edu-body">$8B in catalog deals closed in 2024. Labels are buying proven old music instead of developing unknown new artists. It's safer.</div>
+          <div class="edu-body">Billions in catalog deals will close this year. Labels are buying proven old, established music instead of developing unknown new artists. It's a safer return than taking the "risky" shot at a talented unknown. Labels used to develop artists, but now it's not in the best interest of shareholders.</div>
         </div>
 
         <div class="edu-card">
           <div class="edu-num">03</div>
           <div class="edu-headline">The math</div>
-          <div class="edu-body">Spotify pays ~$0.004 per stream. An artist needs 312,000 streams every month just to earn US minimum wage.</div>
+          <div class="edu-body">Spotify pays ~$0.004 per stream, which means an artist needs 312,000 streams every month to earn U.S. minimum wage.</div>
         </div>
 
         <div class="edu-card">
           <div class="edu-num">04</div>
           <div class="edu-headline">The dilution</div>
-          <div class="edu-body">28% of new Spotify uploads are estimated to be AI-generated. Every fake stream draws from the same pool real artists share.</div>
+          <div class="edu-body">28% of new Spotify uploads are estimated to be AI-generated, a number only expected to grow. Every fake stream draws from the same revenue pool real artists share.</div>
         </div>
 
         <div class="edu-card edu-card-accent">
           <div class="edu-num">05</div>
           <div class="edu-headline">The format</div>
-          <div class="edu-body">doux produces no fixed recording. You cannot buy, freeze, license, or securitize a living system. The artist stays necessary.</div>
+          <div class="edu-body">doux produces no fixed recording. You cannot buy, freeze, license, or securitize a living system. The artist has real leverage in a system built against them, and an open road to consider how their fans can interact with their art.</div>
         </div>
 
       </div>
@@ -770,8 +770,8 @@ strong { color: var(--text-primary); }
     </div>
 
     <div class="claim-body">
-      Every note is fixed. The world around it never is. doux routes live environmental and market data — temperature, transit, air quality, price — directly into the stems. Not as a gimmick. As composition.<br><br>
-      The result is a recording that cannot be licensed away from the artist who made it. You cannot securitize a process. You cannot own a living thing.
+      Every note is fixed. The world around it never is. doux routes live data (presently: temperature, transit, air quality, market activity) directly into the stems as composition, resulting in a song that sounds uniquely different each minute that passes. <br><br>
+      The result is a recording that cannot be licensed away from the artist who made it. You cannot securitize a process or own something so in flux and dependant on the artistic discernment of the musician. What would music look like if we unfroze it?
     </div>
     <a href="https://eegee.substack.com/p/02-what-the-blizzard-composed" target="_blank" class="claim-link">Read: What the Blizzard Composed ↗</a>
   </div>
@@ -1102,7 +1102,7 @@ function attachStemInteractions(){
 
 // ── Modulation ──
 function runModulation(){if(!sharedChainReady||!isPlaying)return;if(currentTrack===1)runMod1();else runMod2();refreshFxSheet();}
-function runMod1(){const now=Tone.now();if(stemData1.subway?.active){const v=liveData.subway.norm,bits=Math.round(8-v*5);stemData1.subway.fx.bits.bits=bits;stemData1.subway.fx.filter.frequency.setTargetAtTime(300+v*3500,now,0.15);stemData1.subway.fx.delay.feedback.setTargetAtTime(0.1+v*0.55,now,0.15);fxDisplay1.subway={bits,filter:Math.round(300+v*3500),feedback:Math.round((0.1+v*0.55)*100)};}if(stemData1.snow?.active){const v=liveData.snow.norm;stemData1.snow.fx.wah.baseFrequency=80+(1-v)*300;stemData1.snow.fx.wah.sensitivity=-30+v*20;stemData1.snow.fx.wah.wet.setTargetAtTime(0.3+v*0.7,now,0.2);stemData1.snow.fx.autoFilter.baseFrequency=200+v*1800;stemData1.snow.fx.autoFilter.wet.setTargetAtTime(v*0.85,now,0.25);stemData1.snow.fx.vibrato.depth.setTargetAtTime(0.05+v*0.4,now,0.25);stemData1.snow.fx.vibrato.frequency.setTargetAtTime(2+v*8,now,0.25);stemData1.snow.fx.pumpLfo.min=v;fxDisplay1.snow={wah:Math.round(80+(1-v)*300),autoFilter:Math.round(v*85),vibrato:+(2+v*8).toFixed(1),pump:Math.round((1-v)*100)};}if(stemData1.temp?.active){const v=liveData.temp.norm;stemData1.temp.fx.ping.feedback.setTargetAtTime(0.05+v*0.55,now,0.3);stemData1.temp.fx.ping.wet.setTargetAtTime(v*0.7,now,0.3);stemData1.temp.fx.chorus.depth=0.05+v*0.75;stemData1.temp.fx.chorus.wet.setTargetAtTime(0.1+v*0.6,now,0.3);stemData1.temp.fx.reverb.wet.rampTo(0.05+v*0.65,0.5);fxDisplay1.temp={ping:Math.round(v*70),chorus:Math.round((0.05+v*0.75)*100),reverb:Math.round((0.05+v*0.65)*100)};}if(stemData1.wind?.active){const v=liveData.wind.norm;stemData1.wind.fx.filter.frequency.setTargetAtTime(100+v*3500,now,0.2);stemData1.wind.fx.dist.distortion=v*0.85;stemData1.wind.fx.dist.wet.setTargetAtTime(v*0.9,now,0.2);fxDisplay1.wind={filter:Math.round(100+v*3500),dist:Math.round(v*100)};}if(stemData1.market?.active){const v=liveData.market.norm,shiftHz=(v-0.5)*52,mag=Math.abs(v-0.5)*2;stemData1.market.fx.freqShift.frequency.setTargetAtTime(shiftHz,now,0.5);stemData1.market.fx.tremolo.frequency.setTargetAtTime(0.5+mag*7.5,now,0.3);stemData1.market.fx.tremolo.depth.setTargetAtTime(0.05+mag*0.75,now,0.3);fxDisplay1.market={shift:shiftHz.toFixed(1),tremolo:+(0.5+mag*7.5).toFixed(1)};}if(stemData1.time?.active){const v=liveData.time.norm,hpFreq=80+(1-v)*2120;stemData1.time.fx.hipass.frequency.setTargetAtTime(hpFreq,now,1.0);stemData1.time.fx.bits.bits=Math.round(3+v*5);fxDisplay1.time={hipass:Math.round(hpFreq),bits:Math.round(3+v*5)};}}
+function runMod1(){const now=Tone.now();if(stemData1.subway?.active){const v=liveData.subway.norm,delayed=v>0.05,bits=delayed?5:8;stemData1.subway.fx.bits.bits=bits;stemData1.subway.fx.filter.frequency.setTargetAtTime(delayed?1500:18000,now,0.15);stemData1.subway.fx.delay.feedback.setTargetAtTime(delayed?0.5:0.1,now,0.15);stemData1.subway.fx.delay.wet.setTargetAtTime(delayed?0.5:0.0,now,0.15);fxDisplay1.subway={bits,filter:delayed?1500:3800,feedback:delayed?50:10};}if(stemData1.snow?.active){const v=liveData.snow.norm;stemData1.snow.fx.wah.baseFrequency=80+(1-v)*300;stemData1.snow.fx.wah.sensitivity=-30+v*20;stemData1.snow.fx.wah.wet.setTargetAtTime(0.3+v*0.7,now,0.2);stemData1.snow.fx.autoFilter.baseFrequency=200+v*1800;stemData1.snow.fx.autoFilter.wet.setTargetAtTime(v*0.85,now,0.25);stemData1.snow.fx.vibrato.depth.setTargetAtTime(0.05+v*0.4,now,0.25);stemData1.snow.fx.vibrato.frequency.setTargetAtTime(2+v*8,now,0.25);stemData1.snow.fx.pumpLfo.min=v;fxDisplay1.snow={wah:Math.round(80+(1-v)*300),autoFilter:Math.round(v*85),vibrato:+(2+v*8).toFixed(1),pump:Math.round((1-v)*100)};}if(stemData1.temp?.active){const v=liveData.temp.norm;stemData1.temp.fx.ping.feedback.setTargetAtTime(0.05+v*0.55,now,0.3);stemData1.temp.fx.ping.wet.setTargetAtTime(v*0.7,now,0.3);stemData1.temp.fx.chorus.depth=0.05+v*0.75;stemData1.temp.fx.chorus.wet.setTargetAtTime(0.1+v*0.6,now,0.3);stemData1.temp.fx.reverb.wet.rampTo(0.05+v*0.65,0.5);fxDisplay1.temp={ping:Math.round(v*70),chorus:Math.round((0.05+v*0.75)*100),reverb:Math.round((0.05+v*0.65)*100)};}if(stemData1.wind?.active){const v=liveData.wind.norm;stemData1.wind.fx.filter.frequency.setTargetAtTime(100+v*3500,now,0.2);stemData1.wind.fx.dist.distortion=v*0.85;stemData1.wind.fx.dist.wet.setTargetAtTime(v*0.9,now,0.2);fxDisplay1.wind={filter:Math.round(100+v*3500),dist:Math.round(v*100)};}if(stemData1.market?.active){const v=liveData.market.norm,shiftHz=(v-0.5)*52,mag=Math.abs(v-0.5)*2;stemData1.market.fx.freqShift.frequency.setTargetAtTime(shiftHz,now,0.5);stemData1.market.fx.tremolo.frequency.setTargetAtTime(0.5+mag*7.5,now,0.3);stemData1.market.fx.tremolo.depth.setTargetAtTime(0.05+mag*0.75,now,0.3);fxDisplay1.market={shift:shiftHz.toFixed(1),tremolo:+(0.5+mag*7.5).toFixed(1)};}if(stemData1.time?.active){const v=liveData.time.norm,hpFreq=80+(1-v)*2120;stemData1.time.fx.hipass.frequency.setTargetAtTime(hpFreq,now,1.0);stemData1.time.fx.bits.bits=Math.round(3+v*5);fxDisplay1.time={hipass:Math.round(hpFreq),bits:Math.round(3+v*5)};}}
 function runMod2(){const now=Tone.now();if(stemData2.t2perc?.active){const v=liveData.subway.norm;const rs=0.1+v*0.85,pr=0.2+v*2.8;stemData2.t2perc.fx.reverb.roomSize=rs;stemData2.t2perc.fx.reverb.wet.setTargetAtTime(v*0.8,now,0.3);stemData2.t2perc.fx.phaser.frequency.setTargetAtTime(pr,now,0.3);stemData2.t2perc.fx.phaser.wet.setTargetAtTime(v*0.6,now,0.3);fxDisplay2.t2perc={roomSize:+rs.toFixed(2),phaserRate:+pr.toFixed(1)};}if(stemData2.t2hats?.active){const v=liveData.market.norm,mag=Math.abs(v-0.5)*2;stemData2.t2hats.fx.lfo.min=1-mag*0.6;stemData2.t2hats.fx.delay.feedback.setTargetAtTime(0.2+mag*0.45,now,0.2);stemData2.t2hats.fx.delay.wet.setTargetAtTime(mag*0.85,now,0.2);stemData2.t2hats.fx.reverb.wet.setTargetAtTime(mag*0.4,now,0.3);fxDisplay2.t2hats={delayWet:Math.round(mag*85),reverbWet:Math.round(mag*40)};}if(stemData2.t2piano?.active){const v=liveData.temp.norm;stemData2.t2piano.fx.reverb.roomSize=0.3+v*0.55;stemData2.t2piano.fx.reverb.dampening=5000-v*3500;stemData2.t2piano.fx.reverb.wet.setTargetAtTime(0.05+v*0.75,now,0.5);stemData2.t2piano.fx.chorus.depth=0.04+v*0.6;stemData2.t2piano.fx.chorus.wet.setTargetAtTime(v*0.55,now,0.4);fxDisplay2.t2piano={reverbWet:Math.round(5+v*75),chorusDepth:Math.round(3+v*62)};}if(stemData2.t2cc?.active){const v=liveData.cloud.norm;stemData2.t2cc.fx.autoFilter.frequency.setTargetAtTime(0.3+v*0.5+(1-v)*6,now,1.0);stemData2.t2cc.fx.autoFilter.octaves=1+(1-v)*3;stemData2.t2cc.fx.autoFilter.wet.setTargetAtTime(0.2+v*0.7,now,0.8);stemData2.t2cc.fx.chorus.depth=0.08+(1-v)*0.5;fxDisplay2.t2cc={filterWet:Math.round(v*90),chorusDepth:Math.round(10+(1-v)*55)};}}
 setInterval(runModulation,100);
 
